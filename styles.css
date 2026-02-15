@@ -1,0 +1,218 @@
+/* Elite Booking — Medical/Spa pastel theme */
+
+:root {
+  --pastel-rose: #FFADAD;
+  --pastel-peach: #FFD6A5;
+  --pastel-mint: #CAFFBF;
+  --pastel-sky: #9BF6FF;
+  --pastel-lavender: #A0C4FF;
+  --pastel-violet: #BDB2FF;
+  --pastel-pink: #FFC6FF;
+  --pastel-cream: #FFFFFC;
+  --pastel-ink: #2D3142;
+  --pastel-muted: #6B7280;
+}
+
+body.elite-booking {
+  font-family: 'Outfit', system-ui, sans-serif;
+  background-color: var(--pastel-cream);
+  color: var(--pastel-ink);
+}
+
+/* Tailwind custom colors (used in HTML) */
+.bg-pastel-cream { background-color: var(--pastel-cream); }
+.text-pastel-ink { color: var(--pastel-ink); }
+.text-pastel-muted { color: var(--pastel-muted); }
+.bg-pastel-rose { background-color: var(--pastel-rose); }
+.bg-pastel-peach { background-color: var(--pastel-peach); }
+.bg-pastel-mint { background-color: var(--pastel-mint); }
+.bg-pastel-sky { background-color: var(--pastel-sky); }
+.bg-pastel-lavender { background-color: var(--pastel-lavender); }
+.bg-pastel-violet { background-color: var(--pastel-violet); }
+.bg-pastel-pink { background-color: var(--pastel-pink); }
+.border-pastel-rose { border-color: var(--pastel-rose); }
+.border-pastel-peach { border-color: var(--pastel-peach); }
+
+/* Header */
+.elite-header {
+  background: linear-gradient(135deg, var(--pastel-cream) 0%, var(--pastel-peach) 100%);
+  box-shadow: 0 2px 12px rgba(45, 49, 66, 0.06);
+}
+
+.elite-step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--pastel-lavender);
+  opacity: 0.4;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.elite-step-dot.active {
+  opacity: 1;
+  background-color: var(--pastel-violet);
+  transform: scale(1.2);
+}
+
+/* Steps: show only active */
+.elite-step {
+  display: none;
+  animation: elite-fadeIn 0.3s ease-out;
+}
+.elite-step.active {
+  display: block;
+}
+@keyframes elite-fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Category cards */
+.elite-card {
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+.elite-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(45, 49, 66, 0.12);
+}
+.elite-card:focus-visible {
+  outline: 2px solid var(--pastel-violet);
+  outline-offset: 2px;
+}
+.elite-card-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 0.75rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+/* Service list items */
+.elite-service-card {
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border: 2px solid rgba(160, 196, 255, 0.4);
+  background: linear-gradient(135deg, #fff 0%, var(--pastel-sky) 8%);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.elite-service-card:hover {
+  border-color: var(--pastel-lavender);
+  box-shadow: 0 4px 16px rgba(160, 196, 255, 0.25);
+}
+.elite-service-name { font-weight: 600; color: var(--pastel-ink); }
+.elite-service-price { color: var(--pastel-muted); font-size: 0.9rem; }
+.elite-service-sena {
+  background: linear-gradient(135deg, var(--pastel-rose), var(--pastel-pink));
+  color: #1f2937;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+.elite-service-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-weight: 600;
+  background: var(--pastel-violet);
+  color: var(--pastel-cream);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.15s;
+}
+.elite-service-btn:hover {
+  transform: scale(1.02);
+  opacity: 0.95;
+}
+
+/* Inputs */
+.elite-input {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 2px solid rgba(189, 178, 255, 0.5);
+  background: #fff;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+.elite-input:focus {
+  outline: none;
+  border-color: var(--pastel-violet);
+}
+.elite-input::placeholder {
+  color: var(--pastel-muted);
+  opacity: 0.8;
+}
+
+/* Buttons */
+.elite-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.15s;
+}
+.elite-btn-primary {
+  background: linear-gradient(135deg, var(--pastel-violet), var(--pastel-lavender));
+  color: var(--pastel-cream);
+}
+.elite-btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(189, 178, 255, 0.4);
+}
+.elite-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.elite-back {
+  background: none;
+  border: none;
+  color: var(--pastel-muted);
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0.25rem 0;
+}
+.elite-back:hover { color: var(--pastel-ink); }
+
+/* Slot buttons */
+.elite-slot {
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  border: 2px solid var(--pastel-lavender);
+  background: #fff;
+  color: var(--pastel-ink);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.elite-slot:hover {
+  background: var(--pastel-lavender);
+  color: var(--pastel-cream);
+}
+.elite-slot.selected {
+  background: var(--pastel-violet);
+  border-color: var(--pastel-violet);
+  color: var(--pastel-cream);
+}
+
+/* Summary box (step 4) */
+.elite-summary {
+  background: linear-gradient(135deg, var(--pastel-sky) 0%, var(--pastel-mint) 100%);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  border: 2px solid rgba(202, 255, 191, 0.6);
+}
+.elite-summary p { margin: 0.25rem 0; font-size: 0.95rem; }
+.elite-summary strong { color: var(--pastel-ink); }

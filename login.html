@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Elite Aesthetic Clinics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#86D9C8', primaryDark: '#8C67A8', dark: '#1F2937' },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], serif: ['Playfair Display', 'Georgia', 'serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-700 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-soft border border-gray-100 p-8">
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-serif font-bold text-dark">Bienvenido</h1>
+            <p class="text-sm text-gray-500">Acceso a tu cuenta clínica</p>
+        </div>
+        <div class="space-y-4">
+            <div>
+                <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Email</label>
+                <input id="authEmail" type="email" placeholder="tu@email.com" class="w-full mt-2 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/40">
+            </div>
+            <div>
+                <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Contraseña</label>
+                <input id="authPassword" type="password" placeholder="********" class="w-full mt-2 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/40">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <button id="loginEmailBtn" class="w-full px-5 py-3 rounded-full bg-dark text-white text-sm font-bold hover:bg-gray-800 transition-all">
+                    Iniciar sesión
+                </button>
+                <button id="signupEmailBtn" class="w-full px-5 py-3 rounded-full bg-primary text-white text-sm font-bold hover:bg-primaryDark transition-all">
+                    Registrarme
+                </button>
+            </div>
+            <button id="magicLinkBtn" class="w-full px-5 py-3 rounded-full border border-primary text-primary text-sm font-bold hover:bg-primary hover:text-white transition-all">
+                Enviar Magic Link
+            </button>
+            <p id="authHint" class="text-xs text-gray-400"></p>
+        </div>
+        <div class="mt-6 text-center">
+            <a href="./V6 - prueba nueva logica.html" class="text-xs text-gray-400 hover:text-primary">Volver al inicio</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./config.js"></script>
+    <script>
+        const authEmail = document.getElementById('authEmail');
+        const authPassword = document.getElementById('authPassword');
+        const loginEmailBtn = document.getElementById('loginEmailBtn');
+        const signupEmailBtn = document.getElementById('signupEmailBtn');
+        const magicLinkBtn = document.getElementById('magicLinkBtn');
+        const authHint = document.getElementById('authHint');
+
+        async function ensurePacienteProfile(user) {
+            if (!user) return null;
+            const { data: existing } = await supabaseClient
+                .from('pacientes')
+                .select('*')
+                .eq('user_id', user.id)
+                .maybeSingle();
+            return existing || null;
+        }
+
+        async function redirectByRole(user) {
+            const profile = await ensurePacienteProfile(user);
+            if (profile?.role === 'admin') {
+                window.location.href = './admin.html';
+            } else {
+                window.location.href = './mi-perfil.html';
+            }
+        }
+
+        loginEmailBtn.addEventListener('click', async () => {
+            authHint.textContent = '';
+            const email = authEmail.value.trim();
+            const password = authPassword.value.trim();
+            if (!email || !password) {
+                authHint.textContent = 'Completá email y contraseña.';
+                return;
+            }
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) return authHint.textContent = error.message;
+            await redirectByRole(data.user);
+        });
+
+        signupEmailBtn.addEventListener('click', async () => {
+            authHint.textContent = '';
+            const email = authEmail.value.trim();
+            const password = authPassword.value.trim();
+            if (!email || !password) {
+                authHint.textContent = 'Completá email y contraseña.';
+                return;
+            }
+            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+            if (error) return authHint.textContent = error.message;
+            authHint.textContent = 'Registro exitoso. Confirmá tu email.';
+            if (data.user) await ensurePacienteProfile(data.user);
+        });
+
+        magicLinkBtn.addEventListener('click', async () => {
+            authHint.textContent = '';
+            const email = authEmail.value.trim();
+            if (!email) return authHint.textContent = 'Ingresá tu email.';
+            const { error } = await supabaseClient.auth.signInWithOtp({ email });
+            if (error) return authHint.textContent = error.message;
+            authHint.textContent = 'Revisá tu email para continuar.';
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session?.user) {
+                await redirectByRole(session.user);
+            }
+        });
+    </script>
+</body>
+</html>

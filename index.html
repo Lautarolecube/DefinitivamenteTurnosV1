@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elite Booking — Reservá tu turno</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="elite-booking font-outfit antialiased">
+  <div id="app" class="min-h-screen bg-pastel-cream">
+    <!-- Header -->
+    <header class="elite-header sticky top-0 z-20">
+      <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+        <a href="#" class="text-xl font-semibold text-pastel-ink" id="logo">Elite Booking</a>
+        <div class="flex items-center gap-2" aria-hidden="true">
+          <span class="elite-step-dot active" data-step="1" title="Categoría"></span>
+          <span class="elite-step-dot" data-step="2" title="Tratamiento"></span>
+          <span class="elite-step-dot" data-step="3" title="Horario"></span>
+          <span class="elite-step-dot" data-step="4" title="Datos y pago"></span>
+        </div>
+      </div>
+    </header>
+
+    <main class="container mx-auto px-4 pb-24">
+      <!-- Paso 1: Categorías -->
+      <section id="step-1" class="elite-step active" data-step="1">
+        <h1 class="text-2xl md:text-3xl font-semibold text-pastel-ink mb-2">Elegí la categoría</h1>
+        <p class="text-pastel-muted mb-6">Seleccioná el tipo de tratamiento que te interesa.</p>
+        <div id="categories-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <!-- Se rellena por JS -->
+        </div>
+      </section>
+
+      <!-- Paso 2: Tratamientos -->
+      <section id="step-2" class="elite-step" data-step="2">
+        <button type="button" class="elite-back mb-4" id="back-from-2" aria-label="Volver a categorías">
+          ← Volver
+        </button>
+        <h1 class="text-2xl md:text-3xl font-semibold text-pastel-ink mb-2">Tratamientos</h1>
+        <p class="text-pastel-muted mb-6" id="step2-subtitle">Elegí tu tratamiento.</p>
+        <div id="services-list" class="space-y-3">
+          <!-- Se rellena por JS -->
+        </div>
+      </section>
+
+      <!-- Paso 3: Profesional y disponibilidad -->
+      <section id="step-3" class="elite-step" data-step="3">
+        <button type="button" class="elite-back mb-4" id="back-from-3" aria-label="Volver a tratamientos">
+          ← Volver
+        </button>
+        <h1 class="text-2xl md:text-3xl font-semibold text-pastel-ink mb-2">Profesional y horario</h1>
+        <p class="text-pastel-muted mb-6" id="step3-subtitle">Elegí profesional, fecha y horario.</p>
+
+        <div class="space-y-4 mb-6">
+          <label class="block">
+            <span class="block text-sm font-medium text-pastel-ink mb-1">Profesional</span>
+            <select id="professional-select" class="elite-input w-full">
+              <option value="">Cargando...</option>
+            </select>
+          </label>
+          <label class="block">
+            <span class="block text-sm font-medium text-pastel-ink mb-1">Fecha</span>
+            <input type="date" id="date-input" class="elite-input w-full" min="" />
+          </label>
+        </div>
+
+        <p class="text-sm font-medium text-pastel-ink mb-2">Horarios disponibles</p>
+        <div id="slots-container" class="flex flex-wrap gap-2 mb-4">
+          <span id="slots-loading" class="text-pastel-muted text-sm hidden">Cargando...</span>
+          <span id="slots-empty" class="text-pastel-muted text-sm hidden">Elegí profesional y fecha.</span>
+          <div id="slots-buttons"></div>
+        </div>
+        <button type="button" class="elite-btn elite-btn-primary w-full hidden" id="btn-continue-step4">
+          Continuar con mis datos
+        </button>
+      </section>
+
+      <!-- Paso 4: Datos y pago -->
+      <section id="step-4" class="elite-step" data-step="4">
+        <button type="button" class="elite-back mb-4" id="back-from-4" aria-label="Volver a horarios">
+          ← Volver
+        </button>
+        <h1 class="text-2xl md:text-3xl font-semibold text-pastel-ink mb-2">Tus datos y pago</h1>
+        <p class="text-pastel-muted mb-6">Completá el formulario y serás redirigido a Mercado Pago para abonar la seña.</p>
+
+        <div class="elite-summary mb-6" id="step4-summary"></div>
+
+        <form id="client-form" class="space-y-4">
+          <label class="block">
+            <span class="block text-sm font-medium text-pastel-ink mb-1">Nombre</span>
+            <input type="text" name="nombre" class="elite-input w-full" required placeholder="Ej. María" />
+          </label>
+          <label class="block">
+            <span class="block text-sm font-medium text-pastel-ink mb-1">Apellido</span>
+            <input type="text" name="apellido" class="elite-input w-full" required placeholder="Ej. García" />
+          </label>
+          <label class="block">
+            <span class="block text-sm font-medium text-pastel-ink mb-1">Email</span>
+            <input type="email" name="email" class="elite-input w-full" required placeholder="tu@email.com" />
+          </label>
+          <label class="block">
+            <span class="block text-sm font-medium text-pastel-ink mb-1">Teléfono</span>
+            <input type="tel" name="telefono" class="elite-input w-full" required placeholder="Ej. 11 1234-5678" />
+          </label>
+          <button type="submit" class="elite-btn elite-btn-primary w-full" id="btn-pay">
+            Ir a Pagar
+          </button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>

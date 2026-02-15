@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Perfil | Elite Aesthetic Clinics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#86D9C8', dark: '#1F2937' },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], serif: ['Playfair Display', 'Georgia', 'serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-700">
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-20 items-center">
+            <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">ML</div>
+                <span class="text-sm font-semibold text-dark">Mirian Leguizamón</span>
+            </div>
+            <a href="./V6 - prueba nueva logica.html" class="text-sm font-medium text-gray-500 hover:text-primary transition-colors">Inicio</a>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-10">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-serif font-bold text-dark">Mi Perfil</h1>
+                <p id="welcomeText" class="text-sm text-gray-500">Cargando tus datos...</p>
+            </div>
+            <div class="flex gap-3">
+                <button id="logoutBtn" class="px-5 py-2 rounded-full border border-gray-200 text-sm font-semibold text-gray-500 hover:text-primary hover:border-primary transition">Cerrar sesión</button>
+                <a href="./V6 - prueba nueva logica.html#agendar-turno" class="px-5 py-2 rounded-full bg-primary text-white text-sm font-bold hover:bg-primaryDark transition">Agendar turno</a>
+            </div>
+        </div>
+
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6 space-y-3">
+                <h2 class="text-lg font-bold text-dark">Tratamientos activos</h2>
+                <div id="treatmentsList" class="text-sm text-gray-500 space-y-3">Sin datos aún.</div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6 space-y-3">
+                <h2 class="text-lg font-bold text-dark">Sesiones disponibles</h2>
+                <div id="sessionsList" class="text-sm text-gray-500 space-y-3">Sin datos aún.</div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6 space-y-3">
+                <h2 class="text-lg font-bold text-dark">Próximo turno</h2>
+                <div id="nextAppointment" class="text-sm text-gray-500">No programado.</div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6 space-y-3">
+                <h2 class="text-lg font-bold text-dark">Pagos y métodos</h2>
+                <div id="paymentsList" class="text-sm text-gray-500 space-y-2">No hay pagos registrados.</div>
+                <div class="text-xs text-gray-400">Métodos: Efectivo · Tarjeta · Transferencia · App</div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6 space-y-3">
+                <h2 class="text-lg font-bold text-dark">Último profesional</h2>
+                <div id="lastProfessional" class="text-sm text-gray-500">Sin registros.</div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6 space-y-3">
+                <h2 class="text-lg font-bold text-dark">Agenda disponible</h2>
+                <p class="text-sm text-gray-500">Verificá disponibilidad en Turnito.</p>
+                <a href="./V6 - prueba nueva logica.html#agendar-turno" class="inline-flex items-center gap-2 text-primary font-semibold text-sm">
+                    Abrir agenda <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6 space-y-6">
+            <h2 class="text-lg font-bold text-dark">Agendar con Turnito</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-gray-50 rounded-2xl border border-gray-100 p-5">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Paso 1</h3>
+                    <h4 class="text-base font-bold text-dark mb-2">Elegí tu tratamiento activo</h4>
+                    <p class="text-xs text-gray-500 mb-4">Solo se muestran packs con sesiones disponibles.</p>
+                    <div id="turnitoTreatmentsList" class="space-y-2"></div>
+                </div>
+                <div class="bg-gray-50 rounded-2xl border border-gray-100 p-5">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Paso 2</h3>
+                    <h4 class="text-base font-bold text-dark mb-2">Elegí profesional</h4>
+                    <p class="text-xs text-gray-500 mb-4">Seleccioná tu profesional preferido.</p>
+                    <div id="turnitoProfessionalsList" class="space-y-2"></div>
+                </div>
+                <div class="bg-gray-50 rounded-2xl border border-gray-100 p-5">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Paso 3</h3>
+                    <h4 class="text-base font-bold text-dark mb-2">Confirmá la seña</h4>
+                    <p class="text-xs text-gray-500 mb-4">Requerimos seña para generar el link.</p>
+                    <label class="flex items-center gap-2 text-sm text-gray-600">
+                        <input type="checkbox" id="turnitoDepositConfirmed" class="rounded border-gray-300 text-primary focus:ring-primary">
+                        Seña pagada / autorizada
+                    </label>
+                    <button id="openTurnitoBtn" class="mt-4 w-full px-5 py-3 rounded-full bg-primary text-white text-sm font-bold hover:bg-primaryDark transition">
+                        Ver agenda
+                    </button>
+                    <p id="turnitoHint" class="text-xs text-gray-500 mt-3"></p>
+                </div>
+            </div>
+            <div id="turnitoFrameWrap" class="hidden-element mt-4 rounded-2xl border border-gray-200 overflow-hidden">
+                <iframe id="turnitoFrame" src="" class="w-full h-[720px]" style="border: none;"></iframe>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6 space-y-4">
+            <h2 class="text-lg font-bold text-dark">Sugerencias de tratamientos</h2>
+            <div id="suggestionsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="text-sm text-gray-500">Cargando sugerencias...</div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./config.js"></script>
+    <script>
+        const welcomeText = document.getElementById('welcomeText');
+        const treatmentsList = document.getElementById('treatmentsList');
+        const sessionsList = document.getElementById('sessionsList');
+        const nextAppointment = document.getElementById('nextAppointment');
+        const paymentsList = document.getElementById('paymentsList');
+        const lastProfessional = document.getElementById('lastProfessional');
+        const suggestionsList = document.getElementById('suggestionsList');
+        const turnitoTreatmentsList = document.getElementById('turnitoTreatmentsList');
+        const turnitoProfessionalsList = document.getElementById('turnitoProfessionalsList');
+        const turnitoDepositConfirmed = document.getElementById('turnitoDepositConfirmed');
+        const openTurnitoBtn = document.getElementById('openTurnitoBtn');
+        const turnitoHint = document.getElementById('turnitoHint');
+        const turnitoFrameWrap = document.getElementById('turnitoFrameWrap');
+        const turnitoFrame = document.getElementById('turnitoFrame');
+        let cachedCatalog = [];
+        let cachedProfessionals = [];
+        let cachedPacks = [];
+        let currentPacienteId = null;
+        let selectedTreatmentId = null;
+        let selectedProfessionalId = null;
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        async function loadProfile() {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) {
+                window.location.href = './login.html';
+                return;
+            }
+            const { data: profile } = await supabaseClient
+                .from('pacientes')
+                .select('*')
+                .eq('user_id', user.id)
+                .maybeSingle();
+            currentPacienteId = profile?.id || null;
+            welcomeText.textContent = profile?.nombre
+                ? `Hola, ${profile.nombre}. Este es tu resumen clínico.`
+                : 'Bienvenida/o a tu panel clínico.';
+
+            await Promise.all([
+                loadPacks(profile?.id),
+                loadHistorial(profile?.id),
+                loadPayments(profile?.id),
+                loadSuggestions(),
+                loadCatalogAndProfessionals()
+            ]);
+        }
+
+        async function loadPacks(pacienteId) {
+            if (!pacienteId) return;
+            const { data: packs } = await supabaseClient
+                .from('paciente_packs')
+                .select('*')
+                .eq('paciente_id', pacienteId);
+            cachedPacks = packs || [];
+            if (!packs || packs.length === 0) {
+                treatmentsList.textContent = 'No tenés tratamientos activos.';
+                sessionsList.textContent = 'Sin sesiones disponibles.';
+                return;
+            }
+            treatmentsList.innerHTML = packs.map(pack => `
+                <div class="flex items-center justify-between">
+                    <span>${pack.tratamiento_id}</span>
+                    <span class="text-xs text-gray-400">${pack.status}</span>
+                </div>
+            `).join('');
+            sessionsList.innerHTML = packs.map(pack => `
+                <div class="flex items-center justify-between">
+                    <span>${pack.tratamiento_id}</span>
+                    <span class="text-xs text-gray-400">${pack.sesiones_restantes}/${pack.total_sesiones}</span>
+                </div>
+            `).join('');
+        }
+
+        async function loadHistorial(pacienteId) {
+            if (!pacienteId) return;
+            const { data: historial } = await supabaseClient
+                .from('historial_clinico')
+                .select('*')
+                .eq('paciente_id', pacienteId)
+                .order('fecha', { ascending: false })
+                .limit(1);
+            if (historial && historial.length) {
+                const item = historial[0];
+                nextAppointment.textContent = 'Revisá agenda disponible para nuevas sesiones.';
+                if (item.profesional_id) {
+                    const { data: prof } = await supabaseClient
+                        .from('profesionales')
+                        .select('nombre')
+                        .eq('id', item.profesional_id)
+                        .maybeSingle();
+                    lastProfessional.textContent = prof?.nombre || 'Profesional no informado';
+                }
+            } else {
+                nextAppointment.textContent = 'No programado.';
+            }
+        }
+
+        async function loadPayments(pacienteId) {
+            if (!pacienteId) return;
+            const { data: pagos } = await supabaseClient
+                .from('caja_movimientos')
+                .select('*')
+                .eq('paciente_id', pacienteId)
+                .order('created_at', { ascending: false })
+                .limit(5);
+            if (!pagos || pagos.length === 0) {
+                paymentsList.textContent = 'No hay pagos registrados.';
+                return;
+            }
+            paymentsList.innerHTML = pagos.map(pago => `
+                <div class="flex items-center justify-between">
+                    <span>${pago.concepto || 'Pago'}</span>
+                    <span class="text-xs text-gray-400">$${pago.monto} · ${pago.medio_pago}</span>
+                </div>
+            `).join('');
+        }
+
+        async function loadSuggestions() {
+            const { data: treatments } = await supabaseClient
+                .from('tratamientos_catalogo')
+                .select('id,nombre,categoria')
+                .limit(6);
+            suggestionsList.innerHTML = (treatments || []).map(t => `
+                <div class="border border-gray-100 rounded-xl p-4">
+                    <div class="text-xs text-gray-400">${t.categoria || 'Complementario'}</div>
+                    <div class="font-semibold text-dark">${t.nombre}</div>
+                </div>
+            `).join('') || '<div class="text-sm text-gray-500">Sin sugerencias disponibles.</div>';
+        }
+
+        async function loadCatalogAndProfessionals() {
+            const [{ data: catalog }, { data: professionals }] = await Promise.all([
+                supabaseClient.from('tratamientos_catalogo').select('*').order('nombre'),
+                supabaseClient.from('profesionales').select('*').order('nombre')
+            ]);
+            cachedCatalog = catalog || [];
+            cachedProfessionals = professionals || [];
+            renderTurnitoSelectors();
+        }
+
+        function renderTurnitoSelectors() {
+            const eligible = cachedCatalog.filter(t =>
+                cachedPacks.some(p => p.tratamiento_id === t.id && p.sesiones_restantes > 0)
+            );
+            const list = eligible.length ? eligible : cachedCatalog;
+            turnitoTreatmentsList.innerHTML = list.map(t => `
+                <button class="w-full text-left px-4 py-2 rounded-xl border ${selectedTreatmentId === t.id ? 'border-primary bg-primary/10' : 'border-gray-200 bg-white'} transition">
+                    <div class="font-semibold text-dark">${t.nombre}</div>
+                    <div class="text-xs text-gray-400">${t.categoria || ''}</div>
+                </button>
+            `).join('');
+            Array.from(turnitoTreatmentsList.children).forEach((btn, idx) => {
+                btn.addEventListener('click', () => {
+                    selectedTreatmentId = list[idx].id;
+                    renderTurnitoSelectors();
+                    renderProfessionals();
+                });
+            });
+            if (!selectedTreatmentId && list.length) {
+                selectedTreatmentId = list[0].id;
+                renderTurnitoSelectors();
+            }
+        }
+
+        function renderProfessionals() {
+            turnitoProfessionalsList.innerHTML = cachedProfessionals.map(p => `
+                <button class="w-full text-left px-4 py-2 rounded-xl border ${selectedProfessionalId === p.id ? 'border-primary bg-primary/10' : 'border-gray-200 bg-white'} transition">
+                    <div class="font-semibold text-dark">${p.nombre}</div>
+                    <div class="text-xs text-gray-400">${p.especialidad || ''}</div>
+                </button>
+            `).join('');
+            Array.from(turnitoProfessionalsList.children).forEach((btn, idx) => {
+                btn.addEventListener('click', () => {
+                    selectedProfessionalId = cachedProfessionals[idx].id;
+                    renderProfessionals();
+                });
+            });
+        }
+
+        function buildTurnitoUrl(treatment, professional, mode) {
+            if (mode === 'eval' && treatment.turnito_eval_url) return treatment.turnito_eval_url;
+            if (mode === 'session' && treatment.turnito_url) return treatment.turnito_url;
+            const baseUrl = window.TURNITO_CONFIG?.baseUrl || '';
+            const params = new URLSearchParams();
+            if (treatment.turnito_service_key) params.set('service_key', treatment.turnito_service_key);
+            if (professional?.turnito_professional_key) params.set('professional_key', professional.turnito_professional_key);
+            if (mode === 'eval') params.set('type', 'evaluation');
+            return baseUrl ? `${baseUrl}?${params.toString()}` : '';
+        }
+
+        async function validateInterval(pacienteId, tratamientoId, minIntervalDays) {
+            if (!minIntervalDays) return { ok: true };
+            const { data } = await supabaseClient
+                .from('historial_clinico')
+                .select('fecha')
+                .eq('paciente_id', pacienteId)
+                .eq('tratamiento_id', tratamientoId)
+                .order('fecha', { ascending: false })
+                .limit(1);
+            if (!data || data.length === 0) return { ok: true };
+            const lastDate = new Date(data[0].fecha);
+            const nextAllowed = new Date(lastDate);
+            nextAllowed.setDate(nextAllowed.getDate() + minIntervalDays);
+            if (nextAllowed > new Date()) {
+                return { ok: false, nextAllowed };
+            }
+            return { ok: true };
+        }
+
+        openTurnitoBtn.addEventListener('click', async () => {
+            turnitoHint.textContent = '';
+            const treatmentId = selectedTreatmentId;
+            const professionalId = selectedProfessionalId;
+            const treatment = cachedCatalog.find(t => t.id === treatmentId);
+            const professional = cachedProfessionals.find(p => p.id === professionalId);
+            if (!treatment) {
+                turnitoHint.textContent = 'Seleccioná un tratamiento.';
+                return;
+            }
+            const pack = cachedPacks.find(p => p.tratamiento_id === treatmentId);
+            if (!pack || pack.sesiones_restantes <= 0) {
+                turnitoHint.textContent = 'No tenés sesiones disponibles para este tratamiento.';
+                return;
+            }
+            if (!turnitoDepositConfirmed.checked) {
+                turnitoHint.textContent = 'Debés confirmar la seña para continuar.';
+                return;
+            }
+            if (treatment.requires_eval) {
+                const evalUrl = buildTurnitoUrl(treatment, professional, 'eval');
+                if (!evalUrl) {
+                    turnitoHint.textContent = 'Este tratamiento requiere evaluación previa.';
+                    return;
+                }
+                turnitoHint.textContent = 'Este tratamiento requiere evaluación previa. Abriendo agenda de evaluación.';
+                turnitoFrame.src = evalUrl;
+                turnitoFrameWrap.classList.remove('hidden-element');
+                turnitoFrame.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+            const intervalCheck = await validateInterval(currentPacienteId, treatmentId, treatment.min_interval_days);
+            if (!intervalCheck.ok) {
+                turnitoHint.textContent = `Debés esperar hasta ${intervalCheck.nextAllowed.toLocaleDateString()}.`;
+                return;
+            }
+            const url = buildTurnitoUrl(treatment, professional, 'session');
+            if (!url) {
+                turnitoHint.textContent = 'Configura la URL de Turnito para este tratamiento.';
+                return;
+            }
+            turnitoFrame.src = url;
+            turnitoFrameWrap.classList.remove('hidden-element');
+            turnitoFrame.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        logoutBtn.addEventListener('click', async () => {
+            await supabaseClient.auth.signOut();
+            window.location.href = './V6 - prueba nueva logica.html';
+        });
+
+        loadProfile();
+    </script>
+</body>
+</html>

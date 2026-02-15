@@ -1,0 +1,10 @@
+{
+  "imports": {
+    "supabase": "npm:@supabase/supabase-js@2",
+    "googleapis": "npm:googleapis@^129.0.0"
+  },
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["deno.ns", "deno.unstable"]
+  }
+}

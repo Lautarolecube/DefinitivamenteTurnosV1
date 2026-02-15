@@ -1,0 +1,1021 @@
+//inicio de la pagina
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Ayuda & Tratamientos | Mirian Leguizamón</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#86D9C8', 
+                        primaryDark: '#8C67A8',
+                        secondary: '#9F4AE0', 
+                        dark: '#1F2937', 
+                        light: '#F3F4F6'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        serif: ['Playfair Display', 'Georgia', 'serif']
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'hover': '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+        .treatment-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .hidden-card, .hidden-element { display: none !important; }
+        .card-image-container { overflow: hidden; }
+        .treatment-card:hover .card-image { transform: scale(1.05); }
+        .card-image { transition: transform 0.5s ease; }
+        .fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
+        .fade-hidden { opacity: 0; transform: translateY(6px); pointer-events: none; }
+        .fade-visible { opacity: 1; transform: translateY(0); }
+        .fade-transition { transition: opacity 0.3s ease, transform 0.3s ease; }
+        .nav-active { color: #86D9C8; border-bottom: 2px solid #86D9C8; padding-bottom: 4px; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-600 antialiased selection:bg-primary selection:text-white">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer">
+                    <img src="img/descarga.jpg" alt="Logo" class="h-10 w-auto rounded-full object-cover shadow-sm">
+
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="./V6 - prueba nueva logica.html" data-nav="inicio" class="text-sm font-medium text-gray-500 hover:text-primary transition-colors">Inicio</a>
+                    <a href="#tratamientos" data-nav="tratamientos" class="text-sm font-medium text-gray-500 hover:text-primary transition-colors">Tratamientos</a>
+                    <a href="./Productos.html" data-nav="productos" class="text-sm font-medium text-gray-500 hover:text-primary transition-colors">Productos</a>
+                    <a href="#agendar-turno" data-nav="ayuda" class="text-sm font-medium text-gray-500 hover:text-primary transition-colors">Centro de Ayuda</a>
+                    <a id="authOpenBtn" href="./login.html" class="px-4 py-2 rounded-full border border-primary text-primary text-sm font-bold hover:bg-primary hover:text-white transition-all">Registrarme / Iniciar Sesión</a>
+                    <a href="#agendar-turno" class="px-5 py-2.5 rounded-full bg-primary text-white text-sm font-bold hover:bg-primaryDark transition-all transform hover:-translate-y-0.5 shadow-lg shadow-primary/30">Agendar Visita</a>
+                </div>
+                <div class="md:hidden">
+                    <button class="text-gray-500 hover:text-primary p-2">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="relative w-full h-[500px] flex flex-col justify-center items-center bg-gray-900">
+        <div class="absolute inset-0 z-0 overflow-hidden">
+            <img src="img/banner.jpg" alt="Banner Estética" class="w-full h-full object-cover opacity-95">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-gray-50/10"></div>
+        </div>
+
+
+        <div class="absolute -bottom-7 w-full max-w-3xl px-4 z-20">
+            <div class="bg-white rounded-full shadow-xl flex items-center p-2 border border-gray-100 transform transition-transform focus-within:scale-[1.01]">
+                <div class="pl-6 text-gray-400"><i class="fa-solid fa-magnifying-glass text-lg"></i></div>
+                <input type="text" id="searchInput" placeholder="Busca tratamientos..." class="w-full p-4 text-gray-700 outline-none text-lg bg-transparent placeholder-gray-400 rounded-full">
+            </div>
+        </div>
+    </header>
+
+<main id="tratamientos" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-4">
+            <div>
+                <h2 class="text-3xl font-serif font-bold text-dark">Tratamientos Destacados</h2>
+                <div class="h-1 w-20 bg-primary mt-2 rounded-full"></div>
+            </div>
+            <div class="flex gap-2 overflow-x-auto pb-2 md:pb-0 hide-scrollbar">
+                <button data-filter="all" class="filter-btn px-4 py-2 bg-primary/10 text-primary rounded-full text-xs font-bold hover:bg-primary hover:text-white transition border border-primary/20">Todos</button>
+                <button data-filter="depilacion" class="filter-btn px-4 py-2 bg-white border border-gray-200 text-gray-500 rounded-full text-xs font-bold hover:border-primary hover:text-primary transition">Depilación Definitiva</button>
+                <button data-filter="facial" class="filter-btn px-4 py-2 bg-white border border-gray-200 text-gray-500 rounded-full text-xs font-bold hover:border-primary hover:text-primary transition">Facial</button>
+                <button data-filter="corporal" class="filter-btn px-4 py-2 bg-white border border-gray-200 text-gray-500 rounded-full text-xs font-bold hover:border-primary hover:text-primary transition">Corporal</button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="cardsContainer">
+            <article class="treatment-card fade-transition fade-visible group bg-white rounded-2xl shadow-soft hover:shadow-hover border border-gray-100 overflow-hidden flex flex-col h-full cursor-pointer relative" data-category="depilacion" role="link" aria-label="Depilación Definitiva" onclick="window.location.href='./Definitivo/DepilacionDefintiva.html'">
+                <div class="h-52 overflow-hidden relative card-image-container">
+                    <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&q=80&w=600" 
+                         alt="Depilación Definitiva" class="card-image w-full h-full object-cover">
+                    <div class="absolute top-4 right-4 bg-white/95 backdrop-blur text-primary text-[10px] font-bold px-3 py-1 uppercase rounded-full shadow-sm">
+                        Depilación Láser
+                    </div>
+                </div>
+                <div class="p-8 flex flex-col flex-1">
+                    <h3 class="text-xl font-bold text-dark mb-3 group-hover:text-primary transition-colors search-target">Depilación Definitiva</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6 flex-1 search-target">
+                        Tecnología láser no invasiva para una piel suave y libre de vello. Resultados duraderos y seguros.
+                    </p>
+                    <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
+                        <span class="text-xs text-gray-400 font-medium"><i class="fa-regular fa-clock mr-1"></i> 15 min</span>
+                        <span class="text-primary text-sm font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center">
+                            Leer más <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                        </span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="treatment-card fade-transition fade-visible group bg-white rounded-2xl shadow-soft hover:shadow-hover border border-gray-100 overflow-hidden flex flex-col h-full cursor-pointer" data-category="facial" role="link" aria-label="Rellenos" onclick="window.location.href='./TratamientosFaciales.html'">
+                <div class="h-52 overflow-hidden relative card-image-container">
+                    <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&q=80&w=600" 
+                         alt="Rellenos" class="card-image w-full h-full object-cover">
+                    <div class="absolute top-4 right-4 bg-white/95 backdrop-blur text-primary text-[10px] font-bold px-3 py-1 uppercase rounded-full shadow-sm">
+                        RELLENOS
+                    </div>
+                </div>
+                <div class="p-8 flex flex-col flex-1">
+                    <h3 class="text-xl font-bold text-dark mb-3 group-hover:text-primary transition-colors search-target">Ácido Hialurónico & Botox</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6 flex-1 search-target">
+                        Guía completa sobre rellenos dérmicos. Recupera el volumen y la hidratación natural de tu piel.
+                    </p>
+                    <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
+                        <span class="text-xs text-gray-400 font-medium"><i class="fa-regular fa-clock mr-1"></i> 30 min</span>
+                        <span class="text-primary text-sm font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center">
+                            Leer más <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                        </span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="treatment-card fade-transition fade-visible group bg-white rounded-2xl shadow-soft hover:shadow-hover border border-gray-100 overflow-hidden flex flex-col h-full cursor-pointer" data-category="corporal" role="link" aria-label="Corporal" onclick="window.location.href='./TratamientosCorporales.html'">
+                <div class="h-52 overflow-hidden relative card-image-container">
+                    <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=600" 
+                         alt="Corporal" class="card-image w-full h-full object-cover">
+                    <div class="absolute top-4 right-4 bg-white/95 backdrop-blur text-primary text-[10px] font-bold px-3 py-1 uppercase rounded-full shadow-sm">
+                        CORPORAL
+                    </div>
+                </div>
+                <div class="p-8 flex flex-col flex-1">
+                    <h3 class="text-xl font-bold text-dark mb-3 group-hover:text-primary transition-colors search-target">Tratamientos Corporales</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6 flex-1 search-target">
+                        Soluciones tecnológicas para reducción de medidas y tonificación corporal avanzada.
+                    </p>
+                    <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
+                        <span class="text-xs text-gray-400 font-medium"><i class="fa-regular fa-clock mr-1"></i> 45 min</span>
+                        <span class="text-primary text-sm font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center">
+                            Leer más <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                        </span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="treatment-card group bg-white rounded-2xl shadow-soft hover:shadow-hover border border-gray-100 overflow-hidden flex flex-col h-full cursor-pointer" role="link" aria-label="Facial" onclick="window.location.href='./TratamientosFaciales.html'">
+                <div class="h-52 overflow-hidden relative card-image-container">
+                    <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&q=80&w=600" 
+                         alt="Facial" class="card-image w-full h-full object-cover">
+                    <div class="absolute top-4 right-4 bg-white/95 backdrop-blur text-primary text-[10px] font-bold px-3 py-1 uppercase rounded-full shadow-sm">
+                        FACIAL
+                    </div>
+                </div>
+                <art class="p-8 flex flex-col flex-1">
+                    <h3 class="text-xl font-bold text-dark mb-3 group-hover:text-primary transition-colors search-target">Tratamientos Faciales</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6 flex-1 search-target">
+                        Soluciones tecnológicas para reducción de medidas y tonificación corporal avanzada.
+                    </p>
+                    <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
+                        <span class="text-xs text-gray-400 font-medium"><i class="fa-regular fa-clock mr-1"></i> 45 min</span>
+                        <span class="text-primary text-sm font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center">
+                            Leer más <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                        </span>
+                    </div>
+                </art>
+            </article>
+
+            <article class="treatment-card group bg-white rounded-2xl shadow-soft hover:shadow-hover border border-gray-100 overflow-hidden flex flex-col h-full cursor-pointer" role="link" aria-label="Facial" onclick="window.location.href='./TratamientosFaciales.html'">
+                <div class="h-52 overflow-hidden relative card-image-container">
+                    <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&q=80&w=600" 
+                         alt="Facial" class="card-image w-full h-full object-cover">
+                    <div class="absolute top-4 right-4 bg-white/95 backdrop-blur text-primary text-[10px] font-bold px-3 py-1 uppercase rounded-full shadow-sm">
+                        FACIAL & CORPORAL
+                    </div>
+                </div>
+                <art class="p-8 flex flex-col flex-1">
+                    <h3 class="text-xl font-bold text-dark mb-3 group-hover:text-primary transition-colors search-target">Mesoterapia & PRP</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6 flex-1 search-target">
+                        Tratamiento médico estético que utiliza microinyecciones de principios activos (vitaminas, minerales, ácido hialurónico, antioxidantes, aminoácidos y otros nutrientes) directamente en las capas medias de la piel o en el tejido donde se busca mejorar.
+                    </p>
+                    <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
+                        <span class="text-xs text-gray-400 font-medium"><i class="fa-regular fa-clock mr-1"></i> 45 min</span>
+                        <span class="text-primary text-sm font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center">
+                            Leer más <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                        </span>
+                    </div>
+                </art>
+            </article>
+
+            
+            <article class="treatment-card group bg-white rounded-2xl shadow-soft hover:shadow-hover border border-gray-100 overflow-hidden flex flex-col h-full cursor-pointer" role="link" aria-label="Facial" onclick="window.location.href='./TratamientosFaciales.html'">
+                <div class="h-52 overflow-hidden relative card-image-container">
+                    <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&q=80&w=600" 
+                         alt="Facial" class="card-image w-full h-full object-cover">
+                    <div class="absolute top-4 right-4 bg-white/95 backdrop-blur text-primary text-[10px] font-bold px-3 py-1 uppercase rounded-full shadow-sm">
+                        PRODUCTOS
+                    </div>
+                </div>
+                <art class="p-8 flex flex-col flex-1">
+                    <h3 class="text-xl font-bold text-dark mb-3 group-hover:text-primary transition-colors search-target">Productos</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6 flex-1 search-target">
+                        Soluciones tecnológicas para reducción de medidas y tonificación corporal avanzada.
+                    </p>
+                    <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
+                        <span class="text-xs text-gray-400 font-medium"><i class="fa-regular fa-clock mr-1"></i> 45 min</span>
+                        <span class="text-primary text-sm font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center">
+                            Leer más <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                        </span>
+                    </div>
+                </art>
+            </article>
+
+            <article class="treatment-card col-span-1 md:col-span-2 lg:col-span-3 bg-gradient-to-r from-primary to-primaryDark rounded-2xl shadow-lg p-8 md:p-12 flex flex-col md:flex-row items-center justify-between relative overflow-hidden">
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                <div class="relative z-10 text-white max-w-2xl text-center md:text-left">
+                    <h3 class="text-2xl font-bold mb-2">Club de Beneficios Exclusivos</h3>
+                    <p class="text-white/90 mb-6 md:mb-0">
+                        Únete a nuestro programa de fidelidad. Obtén descuentos en tus tratamientos mensuales y acceso prioritario.
+                    </p>
+                </div>
+                <div class="relative z-10">
+                    <button class="bg-white text-primary font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-50 hover:scale-105 transition-all">
+                        ¡Registrarme ahora!
+                    </button>
+                </div>
+            </article>
+
+        </div>
+        <div id="catalogSections" class="mt-16 space-y-12"></div>
+    </main>
+
+    <section id="agendar-turno" class="relative py-24 bg-gray-50 overflow-hidden">
+        <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#333 1px, transparent 1px); background-size: 20px 20px;"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <span class="inline-block py-1 px-3 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase mb-4">Agenda Online | Turnos</span>
+                <h2 class="text-3xl md:text-5xl font-serif font-bold text-dark">Reservá tu Visita</h2>
+                <p class="text-gray-500 mt-4 max-w-xl mx-auto text-lg font-light">Agendá solo si tenés tratamiento activo o evaluación médica requerida.</p>
+            </div>
+
+            <div id="agendaAuthGate" class="hidden-element mb-10">
+                <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-8 text-center">
+                    <h3 class="text-xl font-bold text-dark mb-2">Iniciá sesión para reservar</h3>
+                    <p class="text-sm text-gray-500 mb-6">Necesitamos validar tu cuenta antes de habilitar la agenda.</p>
+                    <button id="agendaLoginBtn" class="px-6 py-3 rounded-full bg-primary text-white text-sm font-bold hover:bg-primaryDark transition-all">
+                        Iniciar sesión
+                    </button>
+                </div>
+            </div>
+
+            <div id="agendaSteps" class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+                <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6">
+                    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Paso 1</h3>
+                    <h4 class="text-lg font-bold text-dark mb-2">Elegí tu tratamiento activo</h4>
+                    <p class="text-sm text-gray-500 mb-4">Solo aparecen tratamientos con sesiones disponibles.</p>
+                    <div id="active-treatments-list" class="space-y-3"></div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6">
+                    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Paso 2</h3>
+                    <h4 class="text-lg font-bold text-dark mb-2">Elegí profesional</h4>
+                    <p class="text-sm text-gray-500 mb-4">Mostramos solo profesionales habilitados.</p>
+                    <div id="professionals-container" class="space-y-3"></div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6">
+                    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Paso 3</h3>
+                    <h4 class="text-lg font-bold text-dark mb-2">Confirmá la seña</h4>
+                    <p class="text-sm text-gray-500 mb-4">Requerimos seña para generar el link de agenda.</p>
+                    <label class="flex items-center gap-2 text-sm text-gray-600">
+                        <input type="checkbox" id="depositConfirmed" class="rounded border-gray-300 text-primary focus:ring-primary">
+                        Seña pagada / autorizada
+                    </label>
+                    <button id="openAgendaBtn" class="mt-4 w-full px-5 py-3 rounded-full bg-primary text-white text-sm font-bold hover:bg-primaryDark transition-all shadow-lg shadow-primary/30 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Ver agenda
+                    </button>
+                    <p id="agendaHint" class="text-xs text-gray-400 mt-3"></p>
+                </div>
+            </div>
+
+            <div id="agenda-wrapper" class="mx-auto w-full max-w-5xl bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden relative transition-all duration-500 hidden-element" style="min-height: 850px;">
+                <button onclick="resetAgenda()" class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-xs font-bold text-gray-600 hover:text-primary shadow-sm border border-gray-100"><i class="fa-solid fa-arrow-left mr-2"></i> Cambiar Opción</button>
+                <div class="absolute inset-0 flex flex-col items-center justify-center bg-white z-0" id="iframeLoader">
+                    <div class="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin mb-4"></div>
+                    <span class="text-gray-400 text-sm font-medium tracking-wide">Cargando agenda...</span>
+                </div>
+                <iframe id="turnitoFrame" src="" title="Agenda" class="w-full h-full absolute inset-0 z-10" style="border: none;" allowfullscreen onload="ocultarLoader()"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <section id="mis-tratamientos" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
+                <div>
+                    <h2 class="text-3xl font-serif font-bold text-dark">Mis Tratamientos</h2>
+                    <div class="h-1 w-20 bg-primary mt-2 rounded-full"></div>
+                </div>
+                <button id="loginBtn" class="px-5 py-2.5 rounded-full bg-primary text-white text-sm font-bold hover:bg-primaryDark transition-all shadow-lg shadow-primary/30">
+                    Ingresar
+                </button>
+            </div>
+            <div id="treatments-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <p id="treatments-empty" class="text-sm text-gray-500 mt-4 hidden-element">Todavía no tenés tratamientos activos.</p>
+        </div>
+    </section>
+
+    <section id="comprar-pack" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
+                <div>
+                    <h2 class="text-3xl font-serif font-bold text-dark">Comprar pack o programa</h2>
+                    <div class="h-1 w-20 bg-primary mt-2 rounded-full"></div>
+                </div>
+                <span class="text-sm text-gray-500">Se habilita agenda luego de confirmar pago.</span>
+            </div>
+            <div id="products-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </div>
+    </section>
+
+    <section id="evaluaciones" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
+                <div>
+                    <h2 class="text-3xl font-serif font-bold text-dark">Evaluaciones Médicas</h2>
+                    <div class="h-1 w-20 bg-primary mt-2 rounded-full"></div>
+                </div>
+                <span class="text-sm text-gray-500">Ultherapy, PRP y Criolipólisis requieren evaluación.</span>
+            </div>
+            <div id="evaluations-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </div>
+    </section>
+
+    <div id="authModal" class="hidden-element fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-dark">Registrarme / Iniciar Sesión</h3>
+                <button id="closeAuthModal" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Email</label>
+                    <input id="authEmail" type="email" placeholder="tu@email.com" class="w-full mt-2 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/40">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Contraseña</label>
+                    <input id="authPassword" type="password" placeholder="********" class="w-full mt-2 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/40">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <button id="loginEmailBtn" class="w-full px-5 py-3 rounded-full bg-dark text-white text-sm font-bold hover:bg-gray-800 transition-all">
+                        Iniciar sesión
+                    </button>
+                    <button id="signupEmailBtn" class="w-full px-5 py-3 rounded-full bg-primary text-white text-sm font-bold hover:bg-primaryDark transition-all">
+                        Registrarme
+                    </button>
+                </div>
+                <button id="magicLinkBtn" class="w-full px-5 py-3 rounded-full border border-primary text-primary text-sm font-bold hover:bg-primary hover:text-white transition-all">
+                    Enviar Magic Link
+                </button>
+                <p id="authHint" class="text-xs text-gray-400"></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-white border-t border-gray-200 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-gray-400">&copy; 2024 Mirian Leguizamón. Todos los derechos reservados.</div>
+    </footer>
+
+    <script>
+        const state = {
+            catalog: [],
+            products: [],
+            treatments: [],
+            professionals: [],
+            selectedTreatmentId: null,
+            selectedProfessionalId: null,
+            user: null,
+            profile: null
+        };
+
+        const cardsContainer = document.getElementById('catalogSections');
+        const searchInput = document.getElementById('searchInput');
+        const treatmentsList = document.getElementById('treatments-list');
+        const treatmentsEmpty = document.getElementById('treatments-empty');
+        const productsList = document.getElementById('products-list');
+        const evaluationsList = document.getElementById('evaluations-list');
+        const activeTreatmentsList = document.getElementById('active-treatments-list');
+        const professionalsContainer = document.getElementById('professionals-container');
+        const openAgendaBtn = document.getElementById('openAgendaBtn');
+        const agendaHint = document.getElementById('agendaHint');
+        const depositConfirmed = document.getElementById('depositConfirmed');
+        const agendaWrapper = document.getElementById('agenda-wrapper');
+        const iframe = document.getElementById('turnitoFrame');
+        const loader = document.getElementById('iframeLoader');
+        const agendaAuthGate = document.getElementById('agendaAuthGate');
+        const agendaSteps = document.getElementById('agendaSteps');
+        const agendaLoginBtn = document.getElementById('agendaLoginBtn');
+
+        const authModal = document.getElementById('authModal');
+        const loginBtn = document.getElementById('loginBtn');
+        const authOpenBtn = document.getElementById('authOpenBtn');
+        const closeAuthModal = document.getElementById('closeAuthModal');
+        const authEmail = document.getElementById('authEmail');
+        const authPassword = document.getElementById('authPassword');
+        const loginEmailBtn = document.getElementById('loginEmailBtn');
+        const signupEmailBtn = document.getElementById('signupEmailBtn');
+        const magicLinkBtn = document.getElementById('magicLinkBtn');
+        const authHint = document.getElementById('authHint');
+
+        function openModal() {
+            authModal.classList.remove('hidden-element');
+        }
+
+        function closeModal() {
+            authModal.classList.add('hidden-element');
+        }
+
+        function toggleAgendaAccess(isAuthed) {
+            if (isAuthed) {
+                agendaAuthGate.classList.add('hidden-element');
+                agendaSteps.classList.remove('hidden-element');
+                openAgendaBtn.disabled = false;
+            } else {
+                agendaAuthGate.classList.remove('hidden-element');
+                agendaSteps.classList.add('hidden-element');
+                openAgendaBtn.disabled = true;
+                agendaWrapper.classList.add('hidden-element');
+                iframe.src = "";
+            }
+        }
+
+        function setActiveNav() {
+            const navLinks = document.querySelectorAll('[data-nav]');
+            navLinks.forEach(link => link.classList.remove('nav-active'));
+            const hash = window.location.hash;
+            if (hash === '#tratamientos') {
+                document.querySelector('[data-nav="tratamientos"]')?.classList.add('nav-active');
+                return;
+            }
+            if (hash === '#agendar-turno') {
+                document.querySelector('[data-nav="ayuda"]')?.classList.add('nav-active');
+                return;
+            }
+            document.querySelector('[data-nav="inicio"]')?.classList.add('nav-active');
+        }
+
+        function initFilters() {
+            const buttons = document.querySelectorAll('.filter-btn');
+            const cards = document.querySelectorAll('#cardsContainer .treatment-card');
+            const setActive = (btn) => {
+                buttons.forEach(b => {
+                    b.classList.remove('bg-primary', 'text-white');
+                    b.classList.add('bg-white', 'text-gray-500', 'border-gray-200');
+                });
+                btn.classList.remove('bg-white', 'text-gray-500', 'border-gray-200');
+                btn.classList.add('bg-primary', 'text-white');
+            };
+            const applyFilter = (filter) => {
+                cards.forEach(card => {
+                    const match = filter === 'all' || card.dataset.category === filter;
+                    if (match) {
+                        card.classList.remove('hidden-card', 'fade-hidden');
+                        card.classList.add('fade-visible');
+                    } else {
+                        card.classList.remove('fade-visible');
+                        card.classList.add('fade-hidden');
+                        setTimeout(() => card.classList.add('hidden-card'), 200);
+                    }
+                });
+            };
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setActive(btn);
+                    applyFilter(btn.dataset.filter);
+                });
+            });
+            if (buttons.length) {
+                setActive(buttons[0]);
+                applyFilter(buttons[0].dataset.filter);
+            }
+        }
+
+        async function handleSession(session) {
+            if (!session?.user) {
+                state.user = null;
+                state.profile = null;
+                toggleAgendaAccess(false);
+                return;
+            }
+            state.user = session.user;
+            const { data: profile, error } = await supabaseClient
+                .from('pacientes')
+                .select('*')
+                .eq('user_id', session.user.id)
+                .maybeSingle();
+            if (error) {
+                console.error(error);
+            }
+            state.profile = profile || null;
+            toggleAgendaAccess(Boolean(state.profile));
+            if (state.profile) {
+                await loadTreatments();
+            }
+        }
+
+        async function handlePostLogin(user) {
+            const { data: profile } = await supabaseClient
+                .from('pacientes')
+                .select('*')
+                .eq('user_id', user.id)
+                .maybeSingle();
+            if (profile?.role === 'admin') {
+                window.location.href = './admin.html';
+                return;
+            }
+            window.location.href = './mi-perfil.html';
+        }
+
+        function updateAgendaButtonState() {
+            const hasTreatment = Boolean(state.selectedTreatmentId);
+            const hasDeposit = depositConfirmed.checked;
+            openAgendaBtn.disabled = !(hasTreatment && hasDeposit);
+            if (!hasTreatment) {
+                agendaHint.textContent = "Seleccioná un tratamiento activo.";
+            } else if (!hasDeposit) {
+                agendaHint.textContent = "Confirmá la seña para generar el link.";
+            } else {
+                agendaHint.textContent = "";
+            }
+        }
+
+        function formatServiceName(svc) {
+            return svc.nombre || svc.technology_key || 'Tratamiento';
+        }
+
+        function renderPublicServices() {
+            const categories = {
+                depilacion: 'Depilación',
+                facial: 'Faciales',
+                corporal: 'Corporales',
+                capilar: 'Capilares',
+                medica: 'Médica'
+            };
+            const grouped = {};
+            state.catalog.forEach((svc) => {
+                if (!grouped[svc.categoria]) grouped[svc.categoria] = [];
+                grouped[svc.categoria].push(svc);
+            });
+
+            cardsContainer.innerHTML = '';
+            Object.keys(categories).forEach((key) => {
+                const list = grouped[key] || [];
+                if (list.length === 0) return;
+                const section = document.createElement('section');
+                section.className = 'space-y-6';
+                section.innerHTML = `
+                    <div>
+                        <h3 class="text-2xl font-serif font-bold text-dark">${categories[key]}</h3>
+                        <div class="h-1 w-16 bg-primary mt-2 rounded-full"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-category="${key}"></div>
+                `;
+                const grid = section.querySelector('[data-category]');
+                list.forEach((svc) => {
+                    const card = document.createElement('article');
+                    card.className = 'treatment-card group bg-white rounded-2xl shadow-soft hover:shadow-hover border border-gray-100 overflow-hidden flex flex-col h-full cursor-pointer relative';
+                    card.dataset.category = svc.category;
+                const imageSrc = svc.imagen_url || "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&q=80&w=600";
+                    const title = formatServiceName(svc);
+                    card.innerHTML = `
+                        <div class="h-52 overflow-hidden relative card-image-container">
+                            <img src="${imageSrc}"
+                                 alt="${title}" class="card-image w-full h-full object-cover">
+                        <div class="absolute top-4 right-4 bg-white/95 backdrop-blur text-primary text-[10px] font-bold px-3 py-1 uppercase rounded-full shadow-sm">
+                            ${svc.categoria || 'Tratamiento'}
+                        </div>
+                        </div>
+                        <div class="p-8 flex flex-col flex-1">
+                            <h3 class="text-xl font-bold text-dark mb-3 group-hover:text-primary transition-colors search-target">${title}</h3>
+                            <p class="text-gray-500 text-sm leading-relaxed mb-6 flex-1 search-target">
+                            ${svc.descripcion || 'Tratamiento personalizado para tu objetivo.'}
+                            </p>
+                            <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
+                            <span class="text-xs text-gray-400 font-medium"><i class="fa-regular fa-clock mr-1"></i> ${svc.duration_min || 30} min</span>
+                                <span class="text-primary text-sm font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center">
+                                    Consultar <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+                cardsContainer.appendChild(section);
+            });
+        }
+
+        function renderTreatments() {
+            treatmentsList.innerHTML = '';
+            if (state.treatments.length === 0) {
+                treatmentsEmpty.classList.remove('hidden-element');
+                return;
+            }
+            treatmentsEmpty.classList.add('hidden-element');
+            state.treatments.forEach((treat) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl shadow-soft border border-gray-100 p-6 flex flex-col';
+                const serviceName = treat.service ? formatServiceName(treat.service) : treat.service_key;
+                const blocked = !treat.can_schedule;
+                card.innerHTML = `
+                    <h3 class="text-lg font-bold text-dark mb-2">${serviceName}</h3>
+                    <p class="text-sm text-gray-500 mb-2">${treat.service && treat.service.descripcion ? treat.service.descripcion : 'Tratamiento activo.'}</p>
+                    <p class="text-sm text-gray-500 mb-4">Sesiones restantes: <span class="font-semibold">${treat.sessions_remaining}</span></p>
+                    <p class="text-xs text-gray-400 mb-4">Próxima fecha posible: ${treat.next_allowed_at ? new Date(treat.next_allowed_at).toLocaleDateString() : 'Disponible'}</p>
+                    <button class="agendar-btn px-4 py-2 rounded-full text-sm font-bold ${blocked ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-primary text-white hover:bg-primaryDark'} transition-all">
+                        Agendar sesión
+                    </button>
+                `;
+                card.querySelector('.agendar-btn').onclick = () => {
+                    if (blocked) return;
+                    state.selectedTreatmentId = treat.id;
+                    state.selectedProfessionalId = null;
+                    renderAgendaStep();
+                    document.getElementById('agendar-turno').scrollIntoView({ behavior: 'smooth' });
+                };
+                treatmentsList.appendChild(card);
+            });
+        }
+
+        function renderProducts() {
+            productsList.innerHTML = '';
+            state.products.forEach((prod) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl shadow-soft border border-gray-100 p-6 flex flex-col';
+                const serviceName = prod.nombre || prod.service_key || 'Pack';
+                card.innerHTML = `
+                    <h3 class="text-lg font-bold text-dark mb-2">${serviceName}</h3>
+                    <p class="text-sm text-gray-500 mb-2">${prod.descripcion || ''}</p>
+                    <p class="text-sm text-gray-500 mb-2">${prod.benefit_label}</p>
+                    <p class="text-sm text-gray-500 mb-4">Precio: $${Number(prod.precio || 0).toLocaleString('es-AR')}</p>
+                    <p class="text-xs text-gray-400 mb-4">Seña requerida: ${prod.deposit_required ? `$${Number(prod.deposit_amount || 0).toLocaleString('es-AR')}` : 'No'}</p>
+                    <button class="comprar-btn px-4 py-2 rounded-full text-sm font-bold bg-primary text-white hover:bg-primaryDark transition-all">
+                        Comprar pack
+                    </button>
+                    <p class="text-xs text-gray-400 mt-3 status"></p>
+                `;
+                const statusEl = card.querySelector('.status');
+                card.querySelector('.comprar-btn').onclick = async () => {
+                    try {
+                        if (!state.user) {
+                            openModal();
+                            return;
+                        }
+                        if (prod.link_pago) {
+                            window.open(prod.link_pago, '_blank');
+                            statusEl.textContent = 'Te redirigimos al pago.';
+                        } else {
+                            statusEl.textContent = 'Link de pago no configurado.';
+                        }
+                    } catch (err) {
+                        statusEl.textContent = "No se pudo crear la orden.";
+                    }
+                };
+                productsList.appendChild(card);
+            });
+        }
+
+        function renderEvaluations() {
+            evaluationsList.innerHTML = '';
+            const evals = state.catalog.filter((svc) => svc.requires_eval);
+            evals.forEach((svc) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl shadow-soft border border-gray-100 p-6 flex flex-col';
+                card.innerHTML = `
+                    <h3 class="text-lg font-bold text-dark mb-2">${svc.nombre}</h3>
+                    <p class="text-sm text-gray-500 mb-4">${svc.descripcion || 'Evaluación médica obligatoria.'}</p>
+                    <button class="eval-btn px-4 py-2 rounded-full text-sm font-bold bg-dark text-white hover:bg-gray-800 transition-all">
+                        Agendar evaluación
+                    </button>
+                    <p class="text-xs text-gray-400 mt-3 status"></p>
+                `;
+                const statusEl = card.querySelector('.status');
+                card.querySelector('.eval-btn').onclick = async () => {
+                    try {
+                        if (!state.user) {
+                            openModal();
+                            return;
+                        }
+                        if (!svc.turnito_eval_url && !svc.turnito_url) {
+                            statusEl.textContent = 'No hay URL de evaluación configurada.';
+                            return;
+                        }
+                        cargarAgenda(svc.turnito_eval_url || svc.turnito_url);
+                    } catch (err) {
+                        statusEl.textContent = err.error || "No se pudo generar el link.";
+                    }
+                };
+                evaluationsList.appendChild(card);
+            });
+        }
+
+        function renderAgendaStep() {
+            activeTreatmentsList.innerHTML = '';
+            professionalsContainer.innerHTML = '';
+            const selectable = state.treatments.filter((t) => t.can_schedule);
+            selectable.forEach((treat) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-4 py-3 rounded-xl border ${state.selectedTreatmentId === treat.id ? 'border-primary bg-primary/10' : 'border-gray-200 bg-white'} transition-all`;
+                btn.innerHTML = `
+                    <div class="font-semibold text-dark">${treat.service ? treat.service.technology_key : treat.service_key}</div>
+                    <div class="text-xs text-gray-400">Sesiones restantes: ${treat.sessions_remaining}</div>
+                `;
+                btn.onclick = () => {
+                    state.selectedTreatmentId = treat.id;
+                    state.selectedProfessionalId = null;
+                    renderAgendaStep();
+                };
+                activeTreatmentsList.appendChild(btn);
+            });
+            const selected = state.treatments.find((t) => t.id === state.selectedTreatmentId);
+            if (selected) {
+                state.professionals.forEach((pro) => {
+                    const proBtn = document.createElement('button');
+                    proBtn.className = `w-full text-left px-4 py-3 rounded-xl border ${state.selectedProfessionalId === pro.id ? 'border-primary bg-primary/10' : 'border-gray-200 bg-white'} transition-all`;
+                    proBtn.innerHTML = `
+                        <div class="font-semibold text-dark">${pro.nombre}</div>
+                        <div class="text-xs text-gray-400">${pro.especialidad || ''}</div>
+                    `;
+                    proBtn.onclick = () => {
+                        state.selectedProfessionalId = pro.id;
+                        updateAgendaButtonState();
+                    };
+                    professionalsContainer.appendChild(proBtn);
+                });
+            }
+            updateAgendaButtonState();
+        }
+
+        function cargarAgenda(url) {
+            agendaWrapper.classList.remove('hidden-element');
+            loader.style.display = 'flex';
+            loader.style.opacity = '1';
+            iframe.src = url;
+            agendaWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function resetAgenda() {
+            agendaWrapper.classList.add('hidden-element');
+            iframe.src = "";
+        }
+
+        function ocultarLoader() {
+            loader.style.opacity = '0';
+            setTimeout(() => { loader.style.display = 'none'; }, 300);
+        }
+
+        async function loadCatalog() {
+            const { data, error } = await supabaseClient
+                .from('tratamientos_catalogo')
+                .select('*')
+                .eq('activo', true)
+                .order('nombre', { ascending: true });
+            if (error) {
+                console.error(error);
+                state.catalog = [];
+            } else {
+                state.catalog = data || [];
+            }
+            renderPublicServices();
+            renderEvaluations();
+        }
+
+        async function loadProducts() {
+            const { data, error } = await supabaseClient
+                .from('productos_venta')
+                .select('*')
+                .eq('activo', true)
+                .order('nombre', { ascending: true });
+            if (error) {
+                console.error(error);
+                state.products = [];
+            } else {
+                state.products = data || [];
+            }
+            renderProducts();
+        }
+
+        async function loadProfessionals() {
+            const { data, error } = await supabaseClient
+                .from('profesionales')
+                .select('*')
+                .order('nombre', { ascending: true });
+            if (error) {
+                console.error(error);
+                state.professionals = [];
+            } else {
+                state.professionals = data || [];
+            }
+        }
+
+        async function loadTreatments() {
+            if (!state.profile) {
+                state.treatments = [];
+                renderTreatments();
+                renderAgendaStep();
+                return;
+            }
+            const { data, error } = await supabaseClient
+                .from('paciente_packs')
+                .select('*, tratamientos_catalogo(*)')
+                .eq('paciente_id', state.profile.id);
+            if (error) {
+                console.error(error);
+                state.treatments = [];
+            } else {
+                state.treatments = (data || []).map(pack => ({
+                    id: pack.id,
+                    service_key: pack.tratamiento_id,
+                    pack_sessions_total: pack.total_sesiones,
+                    sessions_remaining: pack.sesiones_restantes,
+                    min_interval_days: pack.tratamientos_catalogo?.min_interval_days || 0,
+                    status: pack.status || 'active',
+                    service: pack.tratamientos_catalogo || null,
+                    last_completed_at: null,
+                    next_allowed_at: null,
+                    can_schedule: pack.sesiones_restantes > 0,
+                    reasons_blocking: pack.sesiones_restantes > 0 ? [] : ['no_sessions']
+                }));
+            }
+            renderTreatments();
+            renderAgendaStep();
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase();
+                    document.querySelectorAll('.treatment-card').forEach(card => {
+                        const fullText = card.textContent.toLowerCase();
+                        if (fullText.includes(query)) {
+                            card.classList.remove('hidden-card');
+                            card.style.opacity = '1';
+                        } else {
+                            card.classList.add('hidden-card');
+                        }
+                    });
+                });
+            }
+
+            const mobileBtn = document.querySelector('.md\\:hidden button');
+            const navLinks = document.querySelector('.hidden.md\\:flex');
+            if (mobileBtn && navLinks) {
+                mobileBtn.addEventListener('click', () => {
+                    navLinks.classList.toggle('hidden');
+                    navLinks.classList.toggle('flex');
+                    navLinks.classList.toggle('flex-col');
+                    navLinks.classList.toggle('absolute');
+                    navLinks.classList.toggle('top-20');
+                    navLinks.classList.toggle('left-0');
+                    navLinks.classList.toggle('w-full');
+                    navLinks.classList.toggle('bg-white');
+                    navLinks.classList.toggle('p-4');
+                    navLinks.classList.toggle('shadow-xl');
+                });
+            }
+
+            loginBtn?.addEventListener('click', openModal);
+            agendaLoginBtn?.addEventListener('click', openModal);
+            closeAuthModal.addEventListener('click', closeModal);
+            loginEmailBtn.addEventListener('click', async () => {
+                authHint.textContent = '';
+                const email = authEmail.value.trim();
+                const password = authPassword.value.trim();
+                if (!email || !password) {
+                    authHint.textContent = 'Completá email y contraseña.';
+                    return;
+                }
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) {
+                    authHint.textContent = error.message;
+                    return;
+                }
+                closeModal();
+                await handlePostLogin(data.user);
+            });
+            signupEmailBtn.addEventListener('click', async () => {
+                authHint.textContent = '';
+                const email = authEmail.value.trim();
+                const password = authPassword.value.trim();
+                if (!email || !password) {
+                    authHint.textContent = 'Completá email y contraseña.';
+                    return;
+                }
+                const { data, error } = await supabaseClient.auth.signUp({ email, password });
+                if (error) {
+                    authHint.textContent = error.message;
+                    return;
+                }
+                authHint.textContent = 'Registro exitoso. Revisá tu email para confirmar.';
+            });
+            magicLinkBtn.addEventListener('click', async () => {
+                authHint.textContent = '';
+                const email = authEmail.value.trim();
+                if (!email) {
+                    authHint.textContent = 'Ingresá tu email.';
+                    return;
+                }
+                const { error } = await supabaseClient.auth.signInWithOtp({ email });
+                if (error) {
+                    authHint.textContent = error.message;
+                    return;
+                }
+                authHint.textContent = 'Te enviamos un link mágico a tu email.';
+            });
+
+            depositConfirmed.addEventListener('change', updateAgendaButtonState);
+            openAgendaBtn.addEventListener('click', async () => {
+                try {
+                    if (!state.profile) {
+                        agendaHint.textContent = 'Iniciá sesión para continuar.';
+                        return;
+                    }
+                    const selected = state.treatments.find(t => t.id === state.selectedTreatmentId);
+                    if (!selected) {
+                        agendaHint.textContent = 'Seleccioná un tratamiento.';
+                        return;
+                    }
+                    if (!depositConfirmed.checked) {
+                        agendaHint.textContent = 'Confirmá la seña para continuar.';
+                        return;
+                    }
+                    if (selected.sessions_remaining <= 0) {
+                        agendaHint.textContent = 'No tenés sesiones disponibles.';
+                        return;
+                    }
+                    if (selected.service?.requires_eval) {
+                        const evalUrl = selected.service.turnito_eval_url || selected.service.turnito_url;
+                        if (!evalUrl) {
+                            agendaHint.textContent = 'Este tratamiento requiere evaluación previa.';
+                            return;
+                        }
+                        cargarAgenda(evalUrl);
+                        return;
+                    }
+                    if (selected.service?.min_interval_days) {
+                        const { data: last } = await supabaseClient
+                            .from('historial_clinico')
+                            .select('fecha')
+                            .eq('paciente_id', state.profile.id)
+                            .eq('tratamiento_id', selected.service_key)
+                            .order('fecha', { ascending: false })
+                            .limit(1);
+                        if (last && last.length) {
+                            const lastDate = new Date(last[0].fecha);
+                            const nextAllowed = new Date(lastDate);
+                            nextAllowed.setDate(nextAllowed.getDate() + selected.service.min_interval_days);
+                            if (nextAllowed > new Date()) {
+                                agendaHint.textContent = `Debés esperar hasta ${nextAllowed.toLocaleDateString()}.`;
+                                return;
+                            }
+                        }
+                    }
+                    const url = selected.service?.turnito_url || selected.service?.turnito_eval_url;
+                    if (!url) {
+                        agendaHint.textContent = 'No hay URL de agenda configurada.';
+                        return;
+                    }
+                    cargarAgenda(url);
+                } catch (err) {
+                    agendaHint.textContent = 'No se pudo generar el link.';
+                }
+            });
+
+            setActiveNav();
+            window.addEventListener('hashchange', setActiveNav);
+            initFilters();
+            const { data: sessionData } = await supabaseClient.auth.getSession();
+            await handleSession(sessionData?.session);
+            await loadCatalog();
+            await loadProducts();
+            renderAgendaStep();
+        });
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./config.js"></script>
+    <script>
+        supabaseClient.auth.onAuthStateChange((_event, session) => {
+            handleSession(session);
+        });
+    </script>
+</body>
+</html>

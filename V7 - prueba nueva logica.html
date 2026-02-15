@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Ayuda & Tratamientos | Mirian Leguizamón</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#86D9C8', 
+                        primaryDark: '#6BC0AF',
+                        secondary: '#9F4AE0', 
+                        dark: '#1F2937', 
+                        light: '#F3F4F6'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        serif: ['Playfair Display', 'Georgia', 'serif']
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'hover': '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+        /* Animaciones y Utilidades */
+        .treatment-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .hidden-element { display: none !important; }
+        .card-image-container { overflow: hidden; }
+        .treatment-card:hover .card-image { transform: scale(1.05); }
+        .card-image { transition: transform 0.5s ease; }
+        .nav-active { color: #86D9C8; border-bottom: 2px solid #86D9C8; padding-bottom: 4px; }
+        
+        /* Scrollbar fina para listas */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-600 antialiased selection:bg-primary selection:text-white">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer">
+                    <div class="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white font-serif font-bold text-xl">M</div>
+                    <span class="font-serif font-bold text-lg text-dark hidden md:block">Mirian Leguizamón</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-sm font-medium text-gray-500 hover:text-primary transition-colors">Inicio</a>
+                    <a href="#tratamientos" class="text-sm font-medium text-gray-500 hover:text-primary transition-colors">Tratamientos</a>
+                    <a href="#agendar-turno" class="px-5 py-2.5 rounded-full bg-primary text-white text-sm font-bold hover:bg-primaryDark transition-all shadow-lg shadow-primary/30">Agendar Visita</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobileMenuBtn" class="text-gray-500 hover:text-primary p-2">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="mobileMenu" class="hidden md:hidden absolute top-20 left-0 w-full bg-white shadow-xl p-6 flex-col space-y-4 border-t border-gray-100 z-40">
+                <a href="#" class="text-dark font-medium block">Inicio</a>
+                <a href="#tratamientos" class="text-dark font-medium block">Tratamientos</a>
+                <a href="#agendar-turno" class="text-primary font-bold block">Agendar Visita</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="relative w-full h-[450px] flex flex-col justify-center items-center bg-gray-900">
+        <div class="absolute inset-0 z-0 overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&q=80&w=1200" alt="Estética" class="w-full h-full object-cover opacity-50">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-gray-50"></div>
+        </div>
+        <div class="relative z-10 text-center px-4 max-w-2xl">
+            <span class="text-primary font-bold tracking-widest text-xs uppercase mb-2 block">Medicina Estética & Bienestar</span>
+            <h1 class="text-4xl md:text-6xl font-serif font-bold text-white mb-6 drop-shadow-lg leading-tight">Tu mejor versión comienza aquí</h1>
+            <p class="text-gray-200 text-lg mb-8 font-light">Tecnología de vanguardia y un equipo de expertas dedicado a tu cuidado personal.</p>
+            <a href="#agendar-turno" class="inline-block bg-white text-dark font-bold py-3 px-8 rounded-full hover:bg-primary hover:text-white transition-all transform hover:scale-105 shadow-xl">Reservar Cita</a>
+        </div>
+    </header>
+
+    <main id="tratamientos" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-dark">Nuestros Tratamientos</h2>
+            <div class="h-1 w-24 bg-primary mx-auto mt-4 rounded-full"></div>
+            <p class="text-gray-500 mt-4">Seleccioná una categoría para conocer más y agendar.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <article class="bg-white rounded-2xl shadow-soft hover:shadow-hover transition-all overflow-hidden cursor-pointer group border border-gray-100" onclick="seleccionarTratamiento('depilacion_vectus')">
+                <div class="h-56 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <span class="absolute bottom-4 left-6 text-white font-bold text-lg">Depilación Láser</span>
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-gray-500 mb-4 line-clamp-2">Tecnología Vectus y Soprano. La solución definitiva para una piel suave todo el año con nuestras licenciadas expertas.</p>
+                    <span class="text-primary text-sm font-bold flex items-center gap-2 group-hover:gap-3 transition-all">Ver Agenda <i class="fa-solid fa-arrow-right"></i></span>
+                </div>
+            </article>
+
+            <article class="bg-white rounded-2xl shadow-soft hover:shadow-hover transition-all overflow-hidden cursor-pointer group border border-gray-100" onclick="seleccionarTratamiento('botox')">
+                <div class="h-56 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <span class="absolute bottom-4 left-6 text-white font-bold text-lg">Facial & Médicos</span>
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-gray-500 mb-4 line-clamp-2">Botox, Rellenos, Mesoterapia Facial y Ultherapy. Rejuvenecimiento con la Dra. Mirian y equipo.</p>
+                    <span class="text-primary text-sm font-bold flex items-center gap-2 group-hover:gap-3 transition-all">Ver Agenda <i class="fa-solid fa-arrow-right"></i></span>
+                </div>
+            </article>
+
+            <article class="bg-white rounded-2xl shadow-soft hover:shadow-hover transition-all overflow-hidden cursor-pointer group border border-gray-100" onclick="seleccionarTratamiento('powershape')">
+                <div class="h-56 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <span class="absolute bottom-4 left-6 text-white font-bold text-lg">Corporales</span>
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-gray-500 mb-4 line-clamp-2">PowerShape, Criolipólisis y Mesoterapia Corporal. Reducción y tonificación efectiva.</p>
+                    <span class="text-primary text-sm font-bold flex items-center gap-2 group-hover:gap-3 transition-all">Ver Agenda <i class="fa-solid fa-arrow-right"></i></span>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <section id="agendar-turno" class="relative py-24 bg-gray-50 overflow-hidden">
+        <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#333 1px, transparent 1px); background-size: 20px 20px;"></div>
+        
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="inline-block py-1 px-3 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase mb-4">Turnos Online</span>
+                <h2 class="text-3xl md:text-5xl font-serif font-bold text-dark">Reservá tu Visita</h2>
+                <p class="text-gray-500 mt-4 max-w-xl mx-auto text-lg font-light">Seleccioná el tratamiento, elegí a tu profesional favorita y confirmá tu horario.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10 items-stretch">
+                
+                <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6 flex flex-col h-full relative overflow-hidden group hover:border-primary/30 transition-colors">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center justify-between">
+                        Paso 1 <span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded text-[10px]">Tratamiento</span>
+                    </h3>
+                    <div id="treatments-list" class="space-y-2 overflow-y-auto pr-2 custom-scrollbar flex-1 max-h-[350px]">
+                        </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6 flex flex-col h-full relative overflow-hidden group hover:border-primary/30 transition-colors">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-gray-200 transition-colors" id="step2-indicator"></div>
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center justify-between">
+                        Paso 2 <span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded text-[10px]">Profesional</span>
+                    </h3>
+                    
+                    <div id="professionals-list" class="space-y-2 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                        <div class="h-full flex flex-col items-center justify-center text-center opacity-40 py-8">
+                            <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-3">
+                                <i class="fa-solid fa-user-doctor text-2xl text-gray-300"></i>
+                            </div>
+                            <p class="text-sm font-medium">Seleccioná un tratamiento primero.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6 flex flex-col h-full relative overflow-hidden group hover:border-primary/30 transition-colors">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-gray-200 transition-colors" id="step3-indicator"></div>
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center justify-between">
+                        Paso 3 <span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded text-[10px]">Confirmar</span>
+                    </h3>
+                    
+                    <div class="flex-1 flex flex-col">
+                        <div class="bg-blue-50/50 p-4 rounded-xl mb-6 border border-blue-100">
+                            <p class="text-xs text-blue-600 flex items-start gap-3 leading-relaxed">
+                                <i class="fa-solid fa-circle-info mt-0.5 text-sm"></i>
+                                <span><strong>Importante:</strong> Para bloquear el horario en la agenda de la profesional, el sistema solicitará el pago de una seña.</span>
+                            </p>
+                        </div>
+
+                        <label class="group/check flex items-start gap-3 text-sm text-gray-600 cursor-pointer p-3 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-200">
+                            <input type="checkbox" id="depositConfirmed" class="mt-0.5 w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer">
+                            <span class="group-hover/check:text-dark transition-colors">He leído y entiendo que debo abonar la seña para confirmar.</span>
+                        </label>
+
+                        <div class="mt-auto pt-6">
+                            <button id="openAgendaBtn" disabled class="w-full px-6 py-4 rounded-xl bg-gray-100 text-gray-400 font-bold transition-all shadow-none cursor-not-allowed flex justify-center items-center gap-3 text-sm">
+                                <span>Ver Disponibilidad</span>
+                                <i class="fa-regular fa-calendar"></i>
+                            </button>
+                            <p id="agendaHint" class="text-xs text-center text-gray-400 mt-3 h-4">Completá los pasos 1 y 2.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="agenda-wrapper" class="hidden-element mx-auto w-full max-w-5xl bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden relative transition-all duration-500 h-[800px] md:h-[650px]">
+                <div class="absolute top-0 left-0 w-full h-14 bg-white/95 backdrop-blur z-20 border-b border-gray-100 flex items-center justify-between px-4">
+                    <button onclick="resetAgenda()" class="text-sm font-bold text-gray-500 hover:text-dark flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+                        <i class="fa-solid fa-arrow-left"></i> Volver atrás
+                    </button>
+                    <span class="text-xs font-bold text-primary uppercase tracking-widest">Turnos Elite</span>
+                </div>
+
+                <div class="absolute inset-0 flex flex-col items-center justify-center bg-white z-10" id="iframeLoader">
+                    <div class="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin mb-4"></div>
+                    <span class="text-gray-400 text-sm font-medium tracking-wide animate-pulse">Conectando con agenda...</span>
+                </div>
+                
+                <iframe id="turnitoFrame" src="" title="Agenda Turnito" class="w-full h-full pt-14 bg-white" style="border: none;" allowfullscreen onload="ocultarLoader()"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white border-t border-gray-200 pt-12 pb-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="h-10 w-10 mx-auto rounded-full bg-gray-900 flex items-center justify-center text-white font-serif font-bold text-xl mb-4">M</div>
+            <p class="text-sm text-gray-400 mb-2">&copy; 2024 Mirian Leguizamón. Todos los derechos reservados.</p>
+            <p class="text-xs text-gray-300">Resistencia, Chaco.</p>
+        </div>
+    </footer>
+
+    <script src="./config.js"></script> 
+    
+    <script>
+        /**
+         * SISTEMA DE GESTIÓN DE TURNOS - CLIENTE
+         * Basado en Agendas de Google Calendar:
+         * - Lic. Camila
+         * - Lic. Eugenia
+         * - Lic. Magalí
+         * - Lic. Mirian (Dra.)
+         * - Lic. Ofelia
+         */
+
+        // 1. CONFIGURACIÓN DEL CATÁLOGO
+        // Mapea Tratamiento -> Lista de Profesionales -> Link Específico
+        const CATALOGO = {
+            'depilacion_vectus': { 
+                name: 'Depilación Vectus',
+                professionals: [
+                    { name: 'Lic. Camila', url: 'https://turnito.app/c/depilacionvectus' }, 
+                    { name: 'Lic. Eugenia', url: 'https://turnito.app/c/depilacionvectus' },
+                    { name: 'Lic. Magalí', url: 'https://turnito.app/c/depilacionvectus' },
+                    { name: 'Lic. Ofelia', url: 'https://turnito.app/c/depilacionvectus' }
+                ]
+            },
+            'depilacion_soprano': { 
+                name: 'Depilación Soprano',
+                professionals: [
+                    { name: 'Lic. Camila', url: 'https://turnito.app/c/depilacionsoprano' },
+                    { name: 'Lic. Eugenia', url: 'https://turnito.app/c/depilacionsoprano' }
+                ]
+            },
+            'ultherapy': { 
+                name: 'Ultherapy (Lifting)',
+                professionals: [
+                    { name: 'Lic. Mirian', url: 'https://turnito.app/c/facialesultherapy' }
+                ]
+            },
+            'botox': { 
+                name: 'Botox & Rellenos',
+                professionals: [
+                    { name: 'Lic. Mirian', url: 'https://turnito.app/c/facialesbotox' }
+                ]
+            },
+            'prp': { 
+                name: 'Plasma Rico en Plaquetas',
+                professionals: [
+                    { name: 'Lic. Mirian', url: 'https://turnito.app/c/plasma' },
+                    { name: 'Lic. Ofelia', url: 'https://turnito.app/c/plasma' }
+                ]
+            },
+            'meso_facial': { 
+                name: 'Mesoterapia Facial',
+                professionals: [
+                    { name: 'Lic. Camila', url: 'https://turnito.app/c/mesoterapia' },
+                    { name: 'Lic. Magalí', url: 'https://turnito.app/c/mesoterapia' }
+                ]
+            },
+            'meso_corp': { 
+                name: 'Mesoterapia Corporal',
+                professionals: [
+                    { name: 'Lic. Eugenia', url: 'https://turnito.app/c/mesocorporales' },
+                    { name: 'Lic. Magalí', url: 'https://turnito.app/c/mesocorporales' }
+                ]
+            },
+            'powershape': { 
+                name: 'Powershape Corporal',
+                professionals: [
+                    { name: 'Lic. Eugenia', url: 'https://turnito.app/c/powershape' },
+                    { name: 'Lic. Ofelia', url: 'https://turnito.app/c/powershape' }
+                ]
+            }
+        };
+
+        // 2. ESTADO DE LA APLICACIÓN
+        const appState = {
+            treatmentKey: null,
+            professional: null, // Objeto { name, url }
+            depositAccepted: false
+        };
+
+        // 3. REFERENCIAS DOM
+        const ui = {
+            treatmentsList: document.getElementById('treatments-list'),
+            professionalsList: document.getElementById('professionals-list'),
+            step2Indicator: document.getElementById('step2-indicator'),
+            step3Indicator: document.getElementById('step3-indicator'),
+            depositCheck: document.getElementById('depositConfirmed'),
+            btnOpen: document.getElementById('openAgendaBtn'),
+            hint: document.getElementById('agendaHint'),
+            wrapper: document.getElementById('agenda-wrapper'),
+            iframe: document.getElementById('turnitoFrame'),
+            loader: document.getElementById('iframeLoader'),
+            mobileBtn: document.getElementById('mobileMenuBtn'),
+            mobileMenu: document.getElementById('mobileMenu')
+        };
+
+        // 4. RENDERIZADO: LISTA DE TRATAMIENTOS
+        function renderTreatments() {
+            ui.treatmentsList.innerHTML = '';
+            
+            Object.keys(CATALOGO).forEach(key => {
+                const item = CATALOGO[key];
+                const btn = document.createElement('button');
+                const isSelected = appState.treatmentKey === key;
+
+                // Estilos dinámicos
+                const baseClass = "w-full text-left px-4 py-3 rounded-xl border mb-2 transition-all flex justify-between items-center group text-sm";
+                const activeClass = "border-primary bg-primary/10 text-primary ring-1 ring-primary font-bold shadow-sm";
+                const inactiveClass = "border-gray-100 bg-white text-gray-600 hover:border-primary/50 hover:shadow-md";
+
+                btn.className = `${baseClass} ${isSelected ? activeClass : inactiveClass}`;
+                btn.innerHTML = `
+                    <span>${item.name}</span>
+                    ${isSelected ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-chevron-right text-xs opacity-30"></i>'}
+                `;
+
+                btn.onclick = () => selectTreatment(key);
+                ui.treatmentsList.appendChild(btn);
+            });
+        }
+
+        // 5. RENDERIZADO: LISTA DE PROFESIONALES
+        function renderProfessionals(key) {
+            ui.professionalsList.innerHTML = '';
+            
+            // Animación visual de activación de paso
+            ui.step2Indicator.className = "absolute top-0 left-0 w-1 h-full bg-primary transition-colors";
+
+            const professionals = CATALOGO[key].professionals;
+
+            if (!professionals || professionals.length === 0) {
+                ui.professionalsList.innerHTML = '<p class="text-xs text-center text-gray-400 mt-4">No hay profesionales disponibles para este servicio.</p>';
+                return;
+            }
+
+            professionals.forEach(pro => {
+                const btn = document.createElement('button');
+                const isSelected = appState.professional && appState.professional.name === pro.name;
+
+                const baseClass = "w-full text-left px-4 py-3 rounded-xl border mb-2 transition-all flex justify-between items-center group text-sm";
+                const activeClass = "border-primary bg-primary text-white shadow-md transform scale-[1.02]";
+                const inactiveClass = "border-gray-100 bg-white text-gray-600 hover:border-primary/50 hover:bg-gray-50";
+
+                btn.className = `${baseClass} ${isSelected ? activeClass : inactiveClass}`;
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-400'} flex items-center justify-center font-serif font-bold text-xs">
+                            ${pro.name.split(' ')[1][0]}
+                        </div>
+                        <span class="font-medium">${pro.name}</span>
+                    </div>
+                    ${isSelected ? '<i class="fa-solid fa-check"></i>' : ''}
+                `;
+
+                btn.onclick = () => selectProfessional(pro);
+                ui.professionalsList.appendChild(btn);
+            });
+        }
+
+        // 6. LÓGICA DE SELECCIÓN
+        function selectTreatment(key) {
+            appState.treatmentKey = key;
+            appState.professional = null; // Reiniciar profesional al cambiar tratamiento
+            appState.depositAccepted = false; // Reiniciar check
+            ui.depositCheck.checked = false;
+            
+            renderTreatments(); // Actualizar UI paso 1
+            renderProfessionals(key); // Cargar paso 2
+            validateFlow(); // Validar botón final
+        }
+
+        function selectProfessional(pro) {
+            appState.professional = pro;
+            // Re-renderizar solo la lista de profesionales para mostrar selección
+            renderProfessionals(appState.treatmentKey);
+            
+            // Activar visualmente el paso 3
+            ui.step3Indicator.className = "absolute top-0 left-0 w-1 h-full bg-primary transition-colors";
+            validateFlow();
+        }
+
+        // 7. VALIDACIÓN FINAL
+        function validateFlow() {
+            const step1 = Boolean(appState.treatmentKey);
+            const step2 = Boolean(appState.professional);
+            const step3 = ui.depositCheck.checked;
+
+            if (step1 && step2 && step3) {
+                // Habilitar
+                ui.btnOpen.disabled = false;
+                ui.btnOpen.classList.remove('bg-gray-100', 'text-gray-400', 'cursor-not-allowed', 'shadow-none');
+                ui.btnOpen.classList.add('bg-primary', 'text-white', 'hover:bg-primaryDark', 'shadow-lg', 'transform', 'hover:-translate-y-1', 'cursor-pointer');
+                ui.hint.textContent = "Listo para agendar.";
+                ui.hint.className = "text-xs text-center text-green-500 mt-3 font-bold";
+            } else {
+                // Deshabilitar
+                ui.btnOpen.disabled = true;
+                ui.btnOpen.classList.add('bg-gray-100', 'text-gray-400', 'cursor-not-allowed', 'shadow-none');
+                ui.btnOpen.classList.remove('bg-primary', 'text-white', 'hover:bg-primaryDark', 'shadow-lg', 'transform', 'hover:-translate-y-1', 'cursor-pointer');
+                
+                // Mensajes de ayuda
+                if (!step1) ui.hint.textContent = "Falta: Elegir tratamiento.";
+                else if (!step2) ui.hint.textContent = "Falta: Elegir profesional.";
+                else if (!step3) ui.hint.textContent = "Falta: Aceptar seña.";
+                ui.hint.className = "text-xs text-center text-gray-400 mt-3";
+            }
+        }
+
+        // 8. ACCIONES DE AGENDA
+        function openAgenda() {
+            if (!appState.professional || !appState.professional.url) return;
+
+            // Mostrar Wrapper
+            ui.wrapper.classList.remove('hidden-element');
+            ui.loader.style.opacity = '1';
+            ui.loader.style.display = 'flex';
+
+            // Cargar URL del profesional seleccionado
+            ui.iframe.src = appState.professional.url;
+
+            // Scroll suave
+            setTimeout(() => {
+                ui.wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        function ocultarLoader() {
+            ui.loader.style.opacity = '0';
+            setTimeout(() => { ui.loader.style.display = 'none'; }, 500);
+        }
+
+        function resetAgenda() {
+            ui.wrapper.classList.add('hidden-element');
+            ui.iframe.src = "";
+            // No reseteamos la selección para que el usuario pueda cambiar rápido de profesional si quiere
+        }
+
+        // 9. HELPER GLOBAL PARA SCROLL DESDE CARDS SUPERIORES
+        window.seleccionarTratamiento = (key) => {
+            // Scroll a la sección
+            document.getElementById('agendar-turno').scrollIntoView({ behavior: 'smooth' });
+            // Seleccionar automáticamente
+            if (CATALOGO[key]) {
+                selectTreatment(key);
+            }
+        };
+
+        // 10. INICIALIZACIÓN
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTreatments(); // Cargar estado inicial
+            
+            // Listeners
+            ui.depositCheck.addEventListener('change', validateFlow);
+            ui.btnOpen.addEventListener('click', openAgenda);
+
+            // Menú Móvil
+            if (ui.mobileBtn) {
+                ui.mobileBtn.addEventListener('click', () => {
+                    ui.mobileMenu.classList.toggle('hidden');
+                    ui.mobileMenu.classList.toggle('flex');
+                });
+            }
+        });
+
+    </script>
+</body>
+</html>

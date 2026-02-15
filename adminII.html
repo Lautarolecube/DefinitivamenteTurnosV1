@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ERP Seguro | Elite Aesthetic Clinics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#86D9C8', 
+                        primaryDark: '#6BC0AF',
+                        dark: '#1F2937', 
+                        light: '#F3F4F6'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        serif: ['Playfair Display', 'Georgia', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hidden-element { display: none !important; }
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .nav-active { background: rgba(255,255,255,0.08); border-left: 4px solid #86D9C8; color: #fff; }
+        
+        /* Capa de seguridad visual para evitar "fOUC" (Flash of Unstyled Content) */
+        #app-content { display: none; } 
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-700 font-sans h-screen overflow-hidden">
+
+    <div id="security-check" class="fixed inset-0 z-50 bg-dark flex flex-col items-center justify-center text-white">
+        <div class="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+        <h2 class="font-serif text-xl tracking-widest">VERIFICANDO CREDENCIALES...</h2>
+        <p class="text-xs text-gray-500 mt-2">Conexión encriptada con Supabase Auth</p>
+    </div>
+
+    <div id="app-content" class="flex h-full">
+        
+        <aside class="w-72 bg-dark text-white flex flex-col shadow-2xl z-20">
+            <div class="p-6 border-b border-gray-700 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-dark font-bold text-xl">E</div>
+                <div>
+                    <h2 class="font-serif font-bold text-lg leading-tight">Elite CRM</h2>
+                    <p class="text-xs text-gray-400" id="admin-email">Cargando usuario...</p>
+                </div>
+            </div>
+            
+            <nav class="flex-1 p-4 space-y-6 overflow-y-auto">
+                <div>
+                    <p class="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Clínica & CRM</p>
+                    <button data-view="pacientes" class="nav-btn nav-active w-full text-left px-4 py-3 rounded-lg hover:bg-gray-800 transition flex items-center gap-3 text-gray-300 hover:text-white">
+                        <i class="fa-solid fa-users w-5"></i> Pacientes
+                    </button>
+                    <button data-view="historial" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-800 transition flex items-center gap-3 text-gray-300 hover:text-white">
+                        <i class="fa-solid fa-notes-medical w-5"></i> Historial Clínico
+                    </button>
+                    <button data-view="presupuestos" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-800 transition flex items-center gap-3 text-gray-300 hover:text-white">
+                        <i class="fa-solid fa-file-invoice-dollar w-5"></i> Presupuestos
+                    </button>
+                </div>
+
+                <div>
+                    <p class="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Wallet & Finanzas</p>
+                    <button data-view="packs" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-800 transition flex items-center gap-3 text-gray-300 hover:text-white">
+                        <i class="fa-solid fa-layer-group w-5"></i> Packs y Wallet
+                    </button>
+                    <button data-view="caja" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-800 transition flex items-center gap-3 text-gray-300 hover:text-white">
+                        <i class="fa-solid fa-cash-register w-5"></i> Caja & Cashflow
+                    </button>
+                    <button data-view="comisiones" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-800 transition flex items-center gap-3 text-gray-300 hover:text-white">
+                        <i class="fa-solid fa-hand-holding-dollar w-5"></i> Comisiones
+                    </button>
+                </div>
+
+                <div>
+                    <p class="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Inventario</p>
+                    <button data-view="inventario" class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-gray-800 transition flex items-center gap-3 text-gray-300 hover:text-white">
+                        <i class="fa-solid fa-boxes-stacked w-5"></i> Control de Stock
+                    </button>
+                </div>
+            </nav>
+
+            <div class="p-4 border-t border-gray-700">
+                <button id="logoutBtn" class="w-full px-4 py-2 rounded-lg bg-red-900/30 text-red-300 hover:bg-red-900/50 transition text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-power-off"></i> Cerrar Sesión Segura
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-1 overflow-auto bg-gray-100 relative">
+            <header class="bg-white shadow-sm px-8 py-4 flex justify-between items-center sticky top-0 z-10">
+                <h1 id="page-title" class="text-2xl font-bold text-dark font-serif">Pacientes</h1>
+                <div class="flex items-center gap-4 text-xs text-gray-500">
+                    <span class="inline-flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span> Conexión Segura (TLS)</span>
+                </div>
+            </header>
+
+            <div class="p-8 max-w-7xl mx-auto space-y-10">
+                <section id="view-pacientes" class="view-section fade-in">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200 flex flex-col md:flex-row gap-4 items-center mb-6">
+                        <div class="relative w-full md:flex-1">
+                            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input id="patientQuery" class="w-full pl-12 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary outline-none" placeholder="Buscar por Nombre, DNI o Teléfono..." />
+                        </div>
+                        <button id="searchBtn" class="bg-dark text-white px-8 py-3 rounded-xl font-bold hover:bg-black transition">Buscar</button>
+                        <button onclick="alert('Usa el modal de registro de la web principal')" class="bg-primary/10 text-primary border border-primary px-6 py-3 rounded-xl font-bold hover:bg-primary hover:text-white transition">
+                            + Nuevo
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <table class="w-full text-left">
+                            <thead class="bg-gray-50 text-gray-500 uppercase text-xs font-bold">
+                                <tr>
+                                    <th class="p-5">Paciente</th>
+                                    <th class="p-5">DNI / Contacto</th>
+                                    <th class="p-5 text-right">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="patientsResult" class="divide-y divide-gray-100 text-sm">
+                                <tr><td colspan="3" class="p-8 text-center text-gray-400">Realiza una búsqueda para comenzar.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="view-historial" class="view-section hidden-element fade-in">
+                    <div class="bg-white p-10 rounded-2xl text-center shadow-sm">
+                        <i class="fa-solid fa-lock text-4xl text-gray-300 mb-4"></i>
+                        <h3 class="text-xl font-bold text-dark">Módulo Historial</h3>
+                        <p class="text-gray-500">Selecciona un paciente desde la pestaña "Pacientes" para ver su historia clínica segura.</p>
+                    </div>
+                </section>
+
+                <section id="view-packs" class="view-section hidden-element fade-in">
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
+                        <h3 class="font-bold text-lg text-dark mb-6">Gestión de Packs</h3>
+                        <p class="text-gray-500">Funcionalidad de Wallet disponible al seleccionar paciente.</p>
+                    </div>
+                </section>
+                
+                <section id="view-caja" class="view-section hidden-element fade-in">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                            <div>
+                                <label class="text-xs font-bold uppercase text-gray-400">Tipo</label>
+                                <select class="w-full mt-1 border p-2 rounded-lg font-bold text-dark">
+                                    <option value="ingreso" class="text-green-600">⬆ Ingreso</option>
+                                    <option value="egreso" class="text-red-600">⬇ Egreso</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold uppercase text-gray-400">Monto</label>
+                                <input type="number" class="w-full mt-1 border p-2 rounded-lg" placeholder="$0.00">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="text-xs font-bold uppercase text-gray-400">Concepto</label>
+                                <div class="flex gap-2 mt-1">
+                                    <input type="text" class="flex-1 border p-2 rounded-lg" placeholder="Concepto del movimiento">
+                                    <button class="bg-green-500 text-white px-6 rounded-lg font-bold hover:bg-green-600">Registrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="view-comisiones" class="view-section hidden-element fade-in">
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
+                        <h3 class="font-bold text-lg text-dark">Liquidación de Comisiones</h3>
+                        <p class="text-gray-500 mt-2">Selecciona un profesional y rango de fechas para calcular.</p>
+                    </div>
+                </section>
+
+                <section id="view-inventario" class="view-section hidden-element fade-in">
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <table class="w-full text-left">
+                            <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+                                <tr>
+                                    <th class="p-4">Insumo</th>
+                                    <th class="p-4">Stock</th>
+                                    <th class="p-4">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-sm">
+                                <tr>
+                                    <td class="p-4 font-bold">Vial Botox (100ui)</td>
+                                    <td class="p-4">12</td>
+                                    <td class="p-4"><span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-bold">OK</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script src="config.js"></script>
+
+    <script>
+        // 2. INICIALIZAR SUPABASE
+        // Usamos las variables del archivo config.js
+        if (typeof SUPABASE_CONFIG === 'undefined') {
+            alert("ERROR CRÍTICO: No se encontró el archivo config.js. El sistema se cerrará.");
+            window.location.href = 'index.html';
+        }
+        
+        const _supabase = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+
+        // 3. AUTH GATE (PORTERO DE SEGURIDAD)
+        // Esta función verifica si hay un usuario logueado antes de mostrar NADA.
+        async function checkSession() {
+            const { data: { session } } = await _supabase.auth.getSession();
+
+            if (!session) {
+                // Si no hay sesión, expulsar inmediatamente
+                console.warn("Acceso denegado: No hay sesión activa.");
+                window.location.href = 'index.html'; // Redirige al login/home
+            } else {
+                // Si hay sesión, permitir acceso y quitar pantalla de carga
+                console.log("Acceso concedido a:", session.user.email);
+                document.getElementById('admin-email').textContent = session.user.email;
+                
+                // Mostrar la App
+                document.getElementById('security-check').style.display = 'none';
+                document.getElementById('app-content').style.display = 'flex';
+            }
+        }
+
+        // Ejecutar verificación al cargar
+        checkSession();
+
+        // 4. LÓGICA DE LOGOUT SEGURO
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            const { error } = await _supabase.auth.signOut();
+            if (!error) {
+                window.location.href = 'index.html';
+            } else {
+                alert("Error al cerrar sesión: " + error.message);
+            }
+        });
+
+        // 5. SISTEMA DE NAVEGACIÓN (SPA)
+        const buttons = document.querySelectorAll('.nav-btn');
+        const views = document.querySelectorAll('.view-section');
+        const pageTitle = document.getElementById('page-title');
+
+        const titles = {
+            'pacientes': 'Gestión de Pacientes',
+            'historial': 'Historial Clínico Digital',
+            'presupuestos': 'Generador de Presupuestos',
+            'packs': 'Wallet de Sesiones y Packs',
+            'caja': 'Control de Caja Diaria',
+            'comisiones': 'Liquidación de Comisiones',
+            'inventario': 'Control de Stock e Insumos'
+        };
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                buttons.forEach(b => b.classList.remove('nav-active'));
+                btn.classList.add('nav-active');
+
+                const targetId = btn.dataset.view;
+                views.forEach(v => v.classList.add('hidden-element'));
+                document.getElementById(`view-${targetId}`).classList.remove('hidden-element');
+                pageTitle.innerText = titles[targetId];
+            });
+        });
+
+        // 6. LÓGICA DE BÚSQUEDA (Conectada a BD)
+        document.getElementById('searchBtn').addEventListener('click', async () => {
+            const query = document.getElementById('patientQuery').value;
+            const tableBody = document.getElementById('patientsResult');
+            
+            tableBody.innerHTML = '<tr><td colspan="3" class="p-8 text-center"><i class="fa-solid fa-spinner fa-spin"></i> Buscando en base de datos...</td></tr>';
+
+            try {
+                const { data, error } = await _supabase
+                    .from('pacientes')
+                    .select('*')
+                    .or(`nombre.ilike.%${query}%,apellido.ilike.%${query}%,dni.ilike.%${query}%`)
+                    .limit(20);
+
+                if (error) throw error;
+
+                if (data.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="3" class="p-8 text-center text-gray-400">No se encontraron pacientes.</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = '';
+                data.forEach(p => {
+                    const row = `
+                        <tr class="hover:bg-gray-50 transition border-b border-gray-100">
+                            <td class="p-5 font-bold text-dark">${p.nombre} ${p.apellido}</td>
+                            <td class="p-5 text-gray-500">
+                                <div><i class="fa-solid fa-id-card mr-2 text-gray-300"></i> ${p.dni || '-'}</div>
+                                <div><i class="fa-solid fa-phone mr-2 text-gray-300"></i> ${p.telefono || '-'}</div>
+                            </td>
+                            <td class="p-5 text-right">
+                                <button class="text-primary hover:text-primaryDark font-bold text-xs bg-primary/10 px-3 py-1 rounded-lg transition transform hover:scale-105">
+                                    Abrir Ficha <i class="fa-solid fa-arrow-right ml-1"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+
+            } catch (err) {
+                console.error(err);
+                tableBody.innerHTML = '<tr><td colspan="3" class="p-8 text-center text-red-500">Error de conexión. Verifica permisos RLS en Supabase.</td></tr>';
+            }
+        });
+
+    </script>
+</body>
+</html>
