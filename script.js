@@ -5,7 +5,7 @@
 
 const CONFIG = {
   SUPABASE_URL: 'https://aeumhaddvjltwxunzque.supabase.co',
-  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFldW1oYWRkdmpsdHd4dW56cXVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4NTQyMTgsImV4cCI6MjA4NjQzMDIxOH0.hHsmPoAp21gR3UCVM4EmwzftrFcMUmqaKsEl0PgfhLU', // Opcional si las Edge Functions son públicas y no lees tablas desde el cliente
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFldW1oYWRkdmpsdHd4dW56cXVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4NTQyMTgsImV4cCI6MjA4NjQzMDIxOH0.hHsmPoAp21gR3UCVM4EmwzftrFcMUmqaKsEl0PgfhLU', 
 };
 
 const FUNCTIONS_URL = `${CONFIG.SUPABASE_URL}/functions/v1`;
@@ -34,11 +34,12 @@ const state = {
   selectedSlot: null,
 };
 
-let supabase = null;
+// === CAMBIO CRÍTICO: supabase -> supabaseClient ===
+let supabaseClient = null;
 if (typeof window !== 'undefined' && window.supabase) {
   try {
     const { createClient } = window.supabase;
-    supabase = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY || '');
+    supabaseClient = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY || '');
   } catch (e) {
     console.warn('Supabase client no inicializado:', e);
   }
@@ -68,9 +69,9 @@ function goToStep(step) {
 }
 
 async function loadCategories() {
-  if (supabase) {
+  if (supabaseClient) {
     try {
-      const { data, error } = await supabase.from('categorias_servicios').select('id, nombre').order('nombre');
+      const { data, error } = await supabaseClient.from('categorias_servicios').select('id, nombre').order('nombre');
       if (!error && data && data.length > 0) {
         state.categories = data.map((c) => ({ id: c.id, nombre: c.nombre || c.id }));
         return;
@@ -79,13 +80,11 @@ async function loadCategories() {
       console.warn('categorias_servicios no disponible, usando categorías por defecto', e);
     }
   }
+  // Fallback si falla la DB
   state.categories = [
     { id: 'vectus', nombre: 'Vectus' },
     { id: 'soprano', nombre: 'Soprano' },
-    { id: 'botox', nombre: 'Botox' },
-    { id: 'rellenos', nombre: 'Rellenos' },
-    { id: 'corporal', nombre: 'Corporal' },
-    { id: 'facial', nombre: 'Facial' },
+    { id: 'botox_rellenos', nombre: 'Botox' }
   ];
 }
 
@@ -116,14 +115,14 @@ function renderStep1() {
 }
 
 async function loadServicesForCategory(categoryId) {
-  if (supabase) {
+  if (supabaseClient) {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from('servicios_items')
-        .select('id, nombre, precio_total, monto_sena, categoria_id, categoria');
+        .select('id, nombre_zona, precio_total, monto_sena, categoria_id');
       if (!error && data && data.length > 0) {
         const filtered = categoryId
-          ? data.filter((s) => (s.categoria_id || s.categoria || '') === categoryId)
+          ? data.filter((s) => s.categoria_id === categoryId)
           : data;
         state.services = filtered.length > 0 ? filtered : data;
         return;
@@ -132,11 +131,7 @@ async function loadServicesForCategory(categoryId) {
       console.warn('servicios_items no disponible', e);
     }
   }
-  state.services = [
-    { id: 'svc-1', nombre: 'Vectus Zona Facial', precio_total: 15000, monto_sena: 5000 },
-    { id: 'svc-2', nombre: 'Soprano Full Body', precio_total: 22000, monto_sena: 7000 },
-    { id: 'svc-3', nombre: 'Botox Área', precio_total: 18000, monto_sena: 6000 },
-  ];
+  state.services = [];
 }
 
 function renderStep2() {
@@ -144,22 +139,29 @@ function renderStep2() {
   const subtitle = document.getElementById('step2-subtitle');
   if (!list) return;
   if (state.selectedCategory) subtitle.textContent = `Tratamientos en ${state.selectedCategory.nombre}.`;
+  
+  if (state.services.length === 0) {
+      list.innerHTML = `<p class="text-pastel-muted">No hay tratamientos disponibles en esta categoría.</p>`;
+      return;
+  }
+
   list.innerHTML = state.services
     .map(
       (s) => `
-      <div class="elite-service-card">
+      <div class="elite-service-card bg-white p-4 rounded-lg shadow-sm border border-gray-100 flex justify-between items-center mb-3">
         <div class="flex-1 min-w-0">
-          <div class="elite-service-name">${escapeHtml(s.nombre || s.id)}</div>
-          <div class="elite-service-price">Precio total: $${formatPrice(s.precio_total)}</div>
+          <div class="elite-service-name font-semibold text-lg text-pastel-ink">${escapeHtml(s.nombre_zona || s.nombre || s.id)}</div>
+          <div class="elite-service-price text-gray-500 text-sm">Precio total: $${formatPrice(s.precio_total)}</div>
         </div>
-        <div class="flex items-center gap-2 flex-wrap">
-          <span class="elite-service-sena">Seña: $${formatPrice(s.monto_sena)}</span>
-          <button type="button" class="elite-service-btn reserve-btn" data-service-id="${escapeHtml(s.id)}" data-service-name="${escapeHtml(s.nombre || '')}" data-monto-sena="${escapeHtml(String(s.monto_sena))}">Reservar</button>
+        <div class="flex flex-col items-end gap-2 flex-wrap">
+          <span class="elite-service-sena text-pastel-rose font-bold">Seña: $${formatPrice(s.monto_sena)}</span>
+          <button type="button" class="elite-service-btn reserve-btn bg-pastel-mint px-4 py-2 rounded-md font-medium text-pastel-ink hover:bg-opacity-80" data-service-id="${escapeHtml(s.id)}" data-service-name="${escapeHtml(s.nombre_zona || s.nombre || '')}" data-monto-sena="${escapeHtml(String(s.monto_sena))}">Reservar</button>
         </div>
       </div>
     `
     )
     .join('');
+    
   list.querySelectorAll('.reserve-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       state.selectedService = {
@@ -178,21 +180,30 @@ function renderStep2() {
 }
 
 async function loadProfessionals() {
-  if (supabase) {
+  if (supabaseClient) {
     try {
-      const { data, error } = await supabase.from('profesionales').select('id, nombre');
+      // Cargamos profesionales filtrados por la categoría seleccionada usando la tabla intermedia
+      const { data, error } = await supabaseClient
+        .from('profesional_categorias')
+        .select(`
+            profesional_id,
+            profesionales (id, nombre)
+        `)
+        .eq('categoria_id', state.selectedCategory.id);
+        
       if (!error && data && data.length > 0) {
-        state.professionals = data;
+        // Formatear la respuesta
+        state.professionals = data.map(rel => ({
+            id: rel.profesionales.id,
+            nombre: rel.profesionales.nombre
+        }));
         return;
       }
     } catch (e) {
       console.warn('profesionales no disponible', e);
     }
   }
-  state.professionals = [
-    { id: 'prof-1', nombre: 'Dra. María López' },
-    { id: 'prof-2', nombre: 'Dr. Juan Pérez' },
-  ];
+  state.professionals = [];
 }
 
 function setDateMin() {
@@ -282,15 +293,22 @@ async function loadSlots() {
     container.innerHTML = slots
       .map(
         (time) => `
-        <button type="button" class="elite-slot ${state.selectedSlot === time ? 'selected' : ''}" data-slot="${escapeHtml(time)}">${escapeHtml(time)}</button>
+        <button type="button" class="elite-slot px-4 py-2 border rounded-md hover:bg-pastel-peach ${state.selectedSlot === time ? 'bg-pastel-rose text-white border-pastel-rose' : 'bg-white border-gray-200'}" data-slot="${escapeHtml(time)}">${escapeHtml(time)}</button>
       `
       )
       .join('');
     container.querySelectorAll('.elite-slot').forEach((btn) => {
       btn.addEventListener('click', () => {
         state.selectedSlot = btn.dataset.slot;
-        container.querySelectorAll('.elite-slot').forEach((b) => b.classList.remove('selected'));
-        btn.classList.add('selected');
+        // Reset styles
+        container.querySelectorAll('.elite-slot').forEach((b) => {
+            b.classList.remove('bg-pastel-rose', 'text-white', 'border-pastel-rose');
+            b.classList.add('bg-white', 'border-gray-200');
+        });
+        // Apply selected style
+        btn.classList.remove('bg-white', 'border-gray-200');
+        btn.classList.add('bg-pastel-rose', 'text-white', 'border-pastel-rose');
+        
         const continueBtn = document.getElementById('btn-continue-step4');
         if (continueBtn) continueBtn.classList.remove('hidden');
       });
@@ -310,10 +328,12 @@ function renderStep4Summary() {
   if (!summary) return;
   const prof = state.selectedProfessional?.nombre || '-';
   summary.innerHTML = `
-    <p><strong>Tratamiento:</strong> ${escapeHtml(state.selectedService?.nombre || '')}</p>
-    <p><strong>Profesional:</strong> ${escapeHtml(prof)}</p>
-    <p><strong>Fecha:</strong> ${escapeHtml(state.selectedDate || '')} · <strong>Hora:</strong> ${escapeHtml(state.selectedSlot || '')}</p>
-    <p><strong>Seña a pagar:</strong> $${formatPrice(state.selectedService?.monto_sena || 0)}</p>
+    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+        <p class="mb-2"><strong class="text-pastel-ink">Tratamiento:</strong> ${escapeHtml(state.selectedService?.nombre || '')}</p>
+        <p class="mb-2"><strong class="text-pastel-ink">Profesional:</strong> ${escapeHtml(prof)}</p>
+        <p class="mb-2"><strong class="text-pastel-ink">Fecha:</strong> ${escapeHtml(state.selectedDate || '')} · <strong>Hora:</strong> ${escapeHtml(state.selectedSlot || '')}</p>
+        <p class="mt-4 text-lg"><strong class="text-pastel-rose">Seña a pagar: $${formatPrice(state.selectedService?.monto_sena || 0)}</strong></p>
+    </div>
   `;
 }
 
@@ -339,7 +359,8 @@ async function submitPayment(formData) {
   const btn = document.getElementById('btn-pay');
   if (btn) {
     btn.disabled = true;
-    btn.textContent = 'Redirigiendo...';
+    btn.textContent = 'Redirigiendo a Mercado Pago...';
+    btn.classList.add('opacity-50', 'cursor-not-allowed');
   }
   try {
     const res = await fetch(getFunctionsUrl('/create-preference'), {
@@ -363,7 +384,7 @@ async function submitPayment(formData) {
       window.location.href = data.init_point;
       return;
     }
-    alert(data.error || 'No se pudo crear el link de pago. Revisá la consola.');
+    alert(data.error || 'No se pudo crear el link de pago. Intentá de nuevo.');
     console.error(data);
   } catch (err) {
     alert('Error de conexión.');
@@ -372,6 +393,7 @@ async function submitPayment(formData) {
     if (btn) {
       btn.disabled = false;
       btn.textContent = 'Ir a Pagar';
+      btn.classList.remove('opacity-50', 'cursor-not-allowed');
     }
   }
 }
