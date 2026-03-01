@@ -4,6 +4,11 @@
 import { createClient } from "supabase";
 import { google } from "googleapis";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
 const ARGENTINA_OFFSET = "-03:00";
 const MP_PAYMENTS_URL = "https://api.mercadopago.com/v1/payments";
 
@@ -46,10 +51,13 @@ function buildArgentinaDatetime(
 }
 
 Deno.serve(async (req: Request): Promise<Response> => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
   if (req.method !== "POST") {
     return new Response(JSON.stringify({ error: "Method not allowed" }), {
       status: 405,
-      headers: { "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
@@ -59,14 +67,14 @@ Deno.serve(async (req: Request): Promise<Response> => {
   } catch {
     return new Response(JSON.stringify({ error: "Invalid JSON" }), {
       status: 400,
-      headers: { "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
   if (payload.type !== "payment") {
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
@@ -74,7 +82,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (!paymentId) {
     return new Response(JSON.stringify({ error: "Missing data.id" }), {
       status: 400,
-      headers: { "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
@@ -83,7 +91,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     console.error("mercadopago-webhook: MP_ACCESS_TOKEN not set");
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
@@ -95,7 +103,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     console.error("mercadopago-webhook: MP GET payment failed", paymentRes.status);
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
@@ -108,7 +116,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (payment.status !== "approved") {
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
@@ -124,7 +132,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (existing) {
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
@@ -135,7 +143,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     console.error("mercadopago-webhook: invalid external_reference", payment.external_reference);
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
@@ -144,7 +152,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     console.error("mercadopago-webhook: missing fields in external_reference", ref);
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
@@ -158,7 +166,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     console.error("mercadopago-webhook: servicio no encontrado", service_item_id, itemError);
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
@@ -233,6 +241,6 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
   return new Response(JSON.stringify({ received: true }), {
     status: 200,
-    headers: { "Content-Type": "application/json" },
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 });

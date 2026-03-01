@@ -4,12 +4,10 @@
 import { createClient } from "supabase";
 import { google } from "googleapis";
 
-// ——— CORS: permitir llamadas desde tu frontend ———
-const CORS_HEADERS = {
+// ——— CORS: permitir llamadas desde frontend (Vercel, etc.) ———
+const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  "Access-Control-Max-Age": "86400",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 const SLOT_STEP_MINUTES = 30;
@@ -93,15 +91,14 @@ function busyEventsToMinutes(
 }
 
 Deno.serve(async (req: Request): Promise<Response> => {
-  // Preflight CORS
   if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: CORS_HEADERS });
+    return new Response("ok", { headers: corsHeaders });
   }
 
   if (req.method !== "POST") {
     return new Response(
       JSON.stringify({ error: "Método no permitido. Use POST." }),
-      { status: 405, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
+      { status: 405, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
@@ -111,7 +108,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   } catch {
     return new Response(
       JSON.stringify({ error: "Cuerpo JSON inválido." }),
-      { status: 400, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
+      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
@@ -121,7 +118,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       JSON.stringify({
         error: "Faltan campos requeridos: professional_id, service_item_id, date.",
       }),
-      { status: 400, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
+      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
@@ -129,7 +126,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (!dateRegex.test(date)) {
     return new Response(
       JSON.stringify({ error: "Formato de fecha inválido. Use YYYY-MM-DD." }),
-      { status: 400, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
+      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
@@ -149,7 +146,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       JSON.stringify({
         error: "Profesional no encontrado o sin google_calendar_id configurado.",
       }),
-      { status: 404, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
+      { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
@@ -167,7 +164,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       JSON.stringify({
         error: "Servicio no encontrado o sin duracion_minutos.",
       }),
-      { status: 404, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
+      { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
@@ -175,7 +172,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (!Number.isInteger(duracionMinutos) || duracionMinutos <= 0) {
     return new Response(
       JSON.stringify({ error: "duracion_minutos inválido para este servicio." }),
-      { status: 400, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
+      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
@@ -184,7 +181,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (!googRaw) {
     return new Response(
       JSON.stringify({ error: "GOOGLE_SERVICE_ACCOUNT no configurado." }),
-      { status: 500, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
@@ -194,7 +191,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   } catch {
     return new Response(
       JSON.stringify({ error: "GOOGLE_SERVICE_ACCOUNT: JSON inválido." }),
-      { status: 500, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
@@ -222,7 +219,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       JSON.stringify({
         error: "Error al consultar disponibilidad en Google Calendar.",
       }),
-      { status: 502, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
+      { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
@@ -245,6 +242,6 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
   return new Response(JSON.stringify({ slots }), {
     status: 200,
-    headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 });
