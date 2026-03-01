@@ -50,15 +50,20 @@ function buildArgentinaDatetime(
   return { startISO, endISO };
 }
 
+function withCors(body: string, status: number): Response {
+  return new Response(body, {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+
 Deno.serve(async (req: Request): Promise<Response> => {
+  try {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
   if (req.method !== "POST") {
-    return new Response(JSON.stringify({ error: "Method not allowed" }), {
-      status: 405,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return withCors(JSON.stringify({ error: "Method not allowed" }), 405);
   }
 
   let payload: WebhookPayload;
@@ -239,8 +244,12 @@ Deno.serve(async (req: Request): Promise<Response> => {
     }
   }
 
-  return new Response(JSON.stringify({ received: true }), {
-    status: 200,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
+  return withCors(JSON.stringify({ received: true }), 200);
+  } catch (err) {
+    console.error("mercadopago-webhook: unhandled error", err);
+    return withCors(
+      JSON.stringify({ error: "Internal server error", received: true }),
+      500
+    );
+  }
 });

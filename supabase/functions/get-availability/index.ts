@@ -14,8 +14,6 @@ const SLOT_STEP_MINUTES = 30;
 const DAY_START = 8; // 08:00 (hora local Argentina)
 const DAY_END = 21;  // 21:00 (hora local Argentina)
 
-/** Zona horaria de la clínica (Argentina). */
-const TIMEZONE = "America/Argentina/Buenos_Aires";
 /** Offset ISO para Argentina (sin DST). */
 const ARGENTINA_OFFSET = "-03:00";
 
